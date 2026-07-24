@@ -182,7 +182,9 @@ function UniverseLayout(){
       {
 
 
-        location.pathname !== "/home" && (
+        location.pathname !== "/home" &&
+
+!location.pathname.startsWith("/observatory/") && (
 
 
           <div

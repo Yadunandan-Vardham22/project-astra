@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 
 import {
   doc,
-  getDoc
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc
 } from "firebase/firestore";
 
 import {
@@ -200,7 +205,171 @@ function ChapterPage(){
   },[]);
 
 
+useEffect(()=>{
 
+
+  async function markChapterNotificationRead(){
+
+
+    if(!chapter || !currentUser)
+      return;
+
+
+
+    const userRef = doc(
+
+      db,
+
+      "users",
+
+      currentUser.uid
+
+    );
+
+
+
+    const userSnapshot =
+
+      await getDoc(userRef);
+
+
+
+    if(!userSnapshot.exists())
+      return;
+
+
+
+    const userData =
+      userSnapshot.data();
+
+
+
+    const currentStarName =
+
+      (
+        userData.starName || ""
+      ).toLowerCase();
+
+
+
+    if(!currentStarName)
+      return;
+
+
+
+
+
+    const notificationQuery = query(
+
+      collection(
+
+        db,
+
+        "notifications"
+
+      ),
+
+
+
+      where(
+
+        "receiver",
+
+        "==",
+
+        currentStarName
+
+      ),
+
+
+
+      where(
+
+        "type",
+
+        "==",
+
+        "observatory"
+
+      )
+
+    );
+
+
+
+
+
+    const snapshot =
+
+      await getDocs(
+
+        notificationQuery
+
+      );
+
+
+
+
+
+    snapshot.docs.forEach(
+
+      async(notificationDoc)=>{
+
+
+        const data =
+          notificationDoc.data();
+
+
+
+        if(
+
+          data.metadata?.storyId === chapter &&
+
+          data.read === false
+
+        ){
+
+
+          await updateDoc(
+
+            doc(
+
+              db,
+
+              "notifications",
+
+              notificationDoc.id
+
+            ),
+
+            {
+
+              read:true
+
+            }
+
+          );
+
+
+        }
+
+
+      }
+
+    );
+
+
+  }
+
+
+
+
+
+  markChapterNotificationRead();
+
+
+
+},[chapter,currentUser]);
 
 
 

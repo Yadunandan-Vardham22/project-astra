@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 import {
   collection,
@@ -8,7 +9,6 @@ import {
   onSnapshot,
   orderBy,
   doc,
-  updateDoc,
   getDoc
 } from "firebase/firestore";
 
@@ -32,6 +32,8 @@ import {
 
 function NotificationBell(){
 
+
+  const navigate = useNavigate();
 
 
   const [open,setOpen] =
@@ -117,11 +119,7 @@ function NotificationBell(){
           const currentStarName =
 
             (
-
-              data.starName ||
-
-              ""
-
+              data.starName || ""
             ).toLowerCase();
 
 
@@ -138,26 +136,18 @@ function NotificationBell(){
 
 
 
-          const notificationRef =
-            collection(
-
-              db,
-
-              "notifications"
-
-            );
-
-
-
-
-
-
-
-
           const notificationQuery =
+
             query(
 
-              notificationRef,
+              collection(
+
+                db,
+
+                "notifications"
+
+              ),
+
 
 
               where(
@@ -210,6 +200,7 @@ function NotificationBell(){
 
 
                   }));
+
 
 
                 setNotifications(data);
@@ -282,7 +273,9 @@ function NotificationBell(){
 
 
     function handleOutsideClick(
+
       event:MouseEvent
+
     ){
 
 
@@ -351,84 +344,16 @@ function NotificationBell(){
 
 
 
-  async function openNotifications(){
+  function openNotifications(){
 
 
     setOpen(true);
 
 
-
-
-
-    const unread =
-
-      notifications.filter(
-
-        notification=>
-
-          notification.read===false
-
-      );
-
-
-
-
-
-    for(const notification of unread){
-
-
-      await updateDoc(
-
-        doc(
-
-          db,
-
-          "notifications",
-
-          notification.id
-
-        ),
-
-        {
-
-          read:true
-
-        }
-
-      );
-
-setNotifications(previous =>
- previous.map(notification=>({
-    ...notification,
-    read:true
- }))
-)
-    }
-
-
-
-
-
-    setNotifications(
-
-      previous=>
-
-        previous.map(notification=>(
-
-          {
-
-            ...notification,
-
-            read:true
-
-          }
-
-        ))
-
-    );
-
-
   }
+
+
+
 
 
 
@@ -510,9 +435,11 @@ setNotifications(previous =>
 
 
 
+
+
         {
 
-          unreadCount>0 && (
+          unreadCount > 0 && (
 
 
             <span
@@ -539,6 +466,7 @@ setNotifications(previous =>
           )
 
         }
+
 
 
       </button>
@@ -624,7 +552,10 @@ setNotifications(previous =>
 
               NOTIFICATIONS
 
+
             </h2>
+
+
 
 
 
@@ -637,6 +568,7 @@ setNotifications(previous =>
               notifications.length===0
 
               ?
+
 
               <p
 
@@ -656,6 +588,7 @@ setNotifications(previous =>
               :
 
 
+
               <div
 
                 className="
@@ -665,6 +598,7 @@ setNotifications(previous =>
               >
 
 
+
               {
 
                 notifications.map(notification=>(
@@ -672,23 +606,61 @@ setNotifications(previous =>
 
                   <div
 
+
                     key={notification.id}
 
+
+                    onClick={()=>{
+
+
+                      if(
+
+                        notification.type === "observatory" &&
+
+                        notification.metadata?.storyId
+
+                      ){
+
+
+                        navigate(
+
+                          `/observatory/${notification.metadata.storyId}`
+
+                        );
+
+
+                        setOpen(false);
+
+
+                      }
+
+
+                    }}
+
+
                     className="
+                      cursor-pointer
                       rounded-xl
                       border
                       border-white/10
                       p-3
+                      transition
+                      hover:bg-white/10
                     "
+
 
                   >
 
 
+
                     <p className="text-sm">
+
 
                       {notification.title}
 
+
                     </p>
+
 
 
 
@@ -703,7 +675,9 @@ setNotifications(previous =>
 
                     >
 
+
                       {notification.message}
+
 
                     </p>
 
@@ -718,10 +692,13 @@ setNotifications(previous =>
               }
 
 
+
               </div>
 
 
             }
+
+
 
 
 

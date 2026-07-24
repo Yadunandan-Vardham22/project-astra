@@ -1,8 +1,24 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  getDoc,orderBy
+} from "firebase/firestore";
 
-import { db } from "../firebase/firebaseConfig";
+
+import {
+  db,
+  auth
+} from "../firebase/firebaseConfig";
+
+import {
+  onAuthStateChanged
+} from "firebase/auth";
 
 import HomeButton from "../components/HomeButton";
 import AddStoryModal from "../components/AddStoryModal";
@@ -28,9 +44,11 @@ function ObservatoryPage(){
   const [showAddStory,setShowAddStory] = useState(false);
 
 
+const [newStories,setNewStories] =
+  useState<string[]>([]);
 
-
-
+const [starName,setStarName] =
+  useState("");
 
 
 
@@ -41,11 +59,23 @@ function ObservatoryPage(){
     try{
 
 
-      const snapshot = await getDocs(
+  const storiesQuery = query(
 
-        collection(db,"stories")
+  collection(db,"stories"),
 
-      );
+  orderBy(
+    "createdAt",
+    "desc"
+  )
+
+);
+
+
+const snapshot = await getDocs(
+
+  storiesQuery
+
+);
 
 
 
@@ -100,7 +130,169 @@ function ObservatoryPage(){
 
 
 
+useEffect(()=>{
 
+
+  const unsubscribeAuth =
+
+    onAuthStateChanged(
+
+      auth,
+
+      async(user)=>{
+
+
+        if(!user)
+          return;
+
+
+
+        const userRef = doc(
+
+          db,
+
+          "users",
+
+          user.uid
+
+        );
+
+
+
+        const userSnapshot =
+
+          await getDoc(userRef);
+
+
+
+        if(!userSnapshot.exists())
+          return;
+
+
+
+        const data =
+          userSnapshot.data();
+
+
+
+        const currentStarName =
+
+          (
+            data.starName || ""
+          ).toLowerCase();
+
+
+
+        setStarName(
+          currentStarName
+        );
+
+
+
+        if(!currentStarName)
+          return;
+
+
+
+
+
+        const notificationQuery = query(
+
+          collection(
+            db,
+            "notifications"
+          ),
+
+
+          where(
+            "receiver",
+            "==",
+            currentStarName
+          ),
+
+
+          where(
+            "read",
+            "==",
+            false
+          )
+
+        );
+
+
+
+
+
+        const unsubscribe =
+
+          onSnapshot(
+
+            notificationQuery,
+
+            (snapshot)=>{
+
+
+              const storyIds =
+
+                snapshot.docs
+
+                .filter(
+
+                  doc =>
+
+                    doc.data().type === "observatory"
+
+                )
+
+                .map(
+
+                  doc =>
+
+                    doc.data().metadata?.storyId
+
+                )
+
+                .filter(
+
+                  (id): id is string =>
+
+                    Boolean(id)
+
+                );
+
+
+
+
+              setNewStories(
+                storyIds
+              );
+
+
+            }
+
+
+          );
+
+
+
+
+        return ()=>unsubscribe();
+
+
+      }
+
+
+    );
+
+
+
+
+
+  return ()=>unsubscribeAuth();
+
+
+
+},[]);
 
   useEffect(()=>{
 
@@ -113,6 +305,24 @@ function ObservatoryPage(){
 
 
 
+function formatDate(timestamp:any){
+
+  if(!timestamp)
+    return "";
+
+  const date =
+    timestamp.toDate();
+
+  return date.toLocaleDateString(
+    "en-US",
+    {
+      month:"long",
+      day:"numeric",
+      year:"numeric"
+    }
+  );
+
+}
 
 
 
@@ -409,7 +619,7 @@ function ObservatoryPage(){
 
 
         {
-          stories.map((story)=>(
+          stories.map((story,index)=>(
 
 
 
@@ -462,23 +672,20 @@ function ObservatoryPage(){
 
 
 
-              <p
+ <p
 
 
-                className="
-                  text-xs
-                  tracking-[0.5em]
-                  text-purple-300
-                "
+  className="
+    text-xs
+    tracking-[0.5em]
+    text-purple-300
+  "
 
+>
 
-              >
+  CHAPTER {String(index + 1).padStart(2,"0")}
 
-                STORY
-
-              </p>
-
-
+</p>
 
 
 
@@ -486,21 +693,60 @@ function ObservatoryPage(){
 
 
 
-              <h2
 
 
-                className="
-                  mt-5
-                  text-3xl
-                  font-light
-                "
+ <div
+  className="
+    mt-5
+    flex
+    items-center
+    gap-3
+  "
+>
+
+  <h2
+
+    className="
+      text-3xl
+      font-light
+    "
+
+  >
+
+    ✦ {story.title}
+
+  </h2>
 
 
-              >
 
-                ✦ {story.title}
+  {
+    newStories.includes(story.id) && (
 
-              </h2>
+      <span
+
+        className="
+          rounded-full
+          border
+          border-purple-300/40
+          bg-purple-500/20
+          px-3
+          py-1
+          text-[10px]
+          tracking-widest
+          text-purple-200
+        "
+
+      >
+
+        NEW ✨
+
+      </span>
+
+    )
+  }
+
+
+</div>
 
 
 
@@ -535,22 +781,45 @@ function ObservatoryPage(){
 
 
 
-              <p
+<div
+
+  className="
+    mt-8
+    text-xs
+    tracking-widest
+    text-white/50
+  "
+
+>
+
+  <p>
+
+    Added by {story.author}
+
+  </p>
 
 
-                className="
-                  mt-8
-                  text-xs
-                  tracking-widest
-                  text-white/50
-                "
+
+  {
+    story.createdAt && (
+
+      <p
+
+        className="
+          mt-2
+        "
+
+      >
+
+        {formatDate(story.createdAt)}
+
+      </p>
+
+    )
+  }
 
 
-              >
-
-                Added by {story.author}
-
-              </p>
+</div>
 
 
 
