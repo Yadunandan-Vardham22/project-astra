@@ -7,6 +7,8 @@ interface BackButtonProps {
 
   label?:string;
 
+  top?:string;
+
 }
 
 
@@ -15,7 +17,9 @@ function BackButton({
 
   path,
 
-  label="Back"
+  label="Back",
+
+  top="top-20   "
 
 }:BackButtonProps){
 
@@ -30,10 +34,10 @@ function BackButton({
 
       onClick={()=>navigate(path)}
 
-      className="
+      className={`
         fixed
         left-6
-        top-6
+        ${top}
         z-50
         cursor-pointer
         rounded-full
@@ -44,7 +48,7 @@ function BackButton({
         py-2
         text-white
         backdrop-blur-xl
-      "
+      `}
 
     >
 

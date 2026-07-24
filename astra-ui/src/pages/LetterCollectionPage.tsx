@@ -1,15 +1,37 @@
-import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import { motion } from "framer-motion";
 
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  orderBy
+} from "firebase/firestore";
+
+
+import {
+  onAuthStateChanged
+} from "firebase/auth";
+
+
+import {
+  auth,
+  db
+} from "../firebase/firebaseConfig";
+
+
 import BackButton from "../components/BackButton";
-import LetterModal from "../components/LetterModal";
 
 
 
 
 
-const collections:any = {
+
+
+const collectionInfo:any = {
 
 
   love:{
@@ -18,77 +40,20 @@ const collections:any = {
 
     title:"Love Letters",
 
-    subtitle:
-    "Words written from the heart.",
-
-
-    letters:[
-
-      {
-        title:"A Little Reminder",
-
-        date:"24 July 2026",
-
-        content:
-`Dear Star,
-
-Sometimes I just want you to remember that you are loved.
-
-Even on the days when you forget your own light,
-I hope you remember that someone believes in you.
-
-Always keep shining.
-
-— Your Star Keeper`
-      },
-
-
-
-      {
-        title:"When You Miss Me",
-
-        date:"A letter saved for lonely nights",
-
-        content:
-`Dear Star,
-
-Distance only changes where we stand,
-not how close two hearts can feel.
-
-Whenever you miss me,
-remember that somewhere there is someone
-thinking about you too.
-
-— Your Star Keeper`
-      },
-
-
-
-      {
-        title:"Things I Never Say",
-
-        date:"A hidden piece of my heart",
-
-        content:
-`Dear Star,
-
-There are feelings that are too big
-to fit inside ordinary conversations.
-
-So I am leaving them here,
-where they will wait forever.
-
-— Your Star Keeper`
-      }
-
-    ]
+    subtitle:"Words written from the heart."
 
   },
 
 
+  angry:{
 
+    icon:"🔥",
 
+    title:"Angry Letters",
 
+    subtitle:"Words written in moments of frustration and emotions left unspoken."
+
+  },
 
 
   apologies:{
@@ -97,76 +62,9 @@ where they will wait forever.
 
     title:"Apology Letters",
 
-    subtitle:
-    "Words after storms.",
-
-
-    letters:[
-
-      {
-
-        title:"Understanding",
-
-        date:"A moment of reflection",
-
-        content:
-`Sometimes we hurt the people we love
-without intending to.
-
-This letter is a reminder that love is also
-about listening, understanding and growing.`
-
-      }
-
-    ]
+    subtitle:"Words after storms."
 
   },
-
-
-
-
-
-
-
-
-  future:{
-
-    icon:"🌌",
-
-    title:"Future Us",
-
-    subtitle:
-    "Messages waiting for tomorrow.",
-
-
-    letters:[
-
-      {
-
-        title:"A Letter From Today",
-
-        date:"Saved for the future",
-
-        content:
-`To the future version of us,
-
-Remember where we started.
-
-Remember the dreams,
-the struggles and the reasons
-we chose each other.`
-
-      }
-
-    ]
-
-  },
-
-
-
-
-
-
 
 
   "dream-journal":{
@@ -175,63 +73,7 @@ we chose each other.`
 
     title:"Dream Journal",
 
-    subtitle:
-    "Worlds that existed while we slept.",
-
-
-    letters:[
-
-      {
-
-        title:"Dream Fragment #001",
-
-        date:"A night worth remembering",
-
-        content:
-`A strange world appeared while sleeping.
-
-A place that existed only for a few moments,
-but felt real enough to deserve a memory.`
-
-      }
-
-    ]
-
-  },
-
-
-
-
-
-
-
-
-  hidden:{
-
-    icon:"✨",
-
-    title:"Hidden Letters",
-
-    subtitle:
-    "Secrets waiting to be discovered.",
-
-
-    letters:[
-
-      {
-
-        title:"Hidden Message",
-
-        date:"Locked among the stars",
-
-        content:
-`Some messages are not meant to be found immediately.
-
-They wait for the perfect moment.`
-
-      }
-
-    ]
+    subtitle:"Worlds that existed while we slept."
 
   }
 
@@ -246,23 +88,255 @@ They wait for the perfect moment.`
 
 
 
-
 function LetterCollectionPage(){
 
 
 
-  const {category}=useParams();
+  const navigate = useNavigate();
 
 
 
-  const collection =
-    collections[category || "love"];
+  const {
+    category
+  } = useParams();
+
+
+
+
+  const [letters,setLetters] =
+
+    useState<any[]>([]);
+
+
+
+
+  const [loading,setLoading] =
+
+    useState(true);
+
+
+
+
+  const [currentUser,setCurrentUser] =
+
+    useState<any>(null);
 
 
 
 
 
-  const [selectedLetter,setSelectedLetter]=useState<any>(null);
+
+
+
+
+  useEffect(()=>{
+
+
+    const unsubscribe =
+
+      onAuthStateChanged(
+
+        auth,
+
+        (user)=>{
+
+
+          setCurrentUser(user);
+
+
+        }
+
+      );
+
+
+
+    return ()=>unsubscribe();
+
+
+
+  },[]);
+
+
+
+
+
+
+
+
+
+
+
+
+  useEffect(()=>{
+
+
+    if(!category)
+
+      return;
+
+
+
+    const lettersQuery = query(
+
+
+
+      collection(
+
+        db,
+
+        "letters"
+
+      ),
+
+
+
+
+      where(
+
+        "category",
+
+        "==",
+
+        category
+
+      ),
+
+
+
+
+      orderBy(
+
+        "createdAt",
+
+        "desc"
+
+      )
+
+
+    );
+
+
+
+
+
+
+
+    const unsubscribe =
+
+      onSnapshot(
+
+
+
+        lettersQuery,
+
+
+
+        (snapshot)=>{
+
+
+          const data =
+
+
+            snapshot.docs.map(doc=>({
+
+
+              id:doc.id,
+
+
+              ...doc.data()
+
+
+            }));
+
+
+
+          setLetters(data);
+
+
+
+          setLoading(false);
+
+
+
+        },
+
+
+
+        (error)=>{
+
+
+          console.error(
+
+            "Error fetching letters:",
+
+            error
+
+          );
+
+
+          setLoading(false);
+
+
+        }
+
+
+      );
+
+
+
+
+
+    return ()=>unsubscribe();
+
+
+
+  },[category]);
+
+
+
+
+
+
+
+
+
+  const currentCollection =
+
+    collectionInfo[category || "love"];
+
+
+
+
+
+
+  if(!currentCollection){
+
+
+    return (
+
+      <div
+
+        className="
+          min-h-screen
+          flex
+          items-center
+          justify-center
+          bg-black
+          text-white
+        "
+
+      >
+
+        Collection not found
+
+      </div>
+
+    );
+
+
+  }
+
+
 
 
 
@@ -271,6 +345,8 @@ function LetterCollectionPage(){
 
 
   return (
+
+
 
     <div
 
@@ -324,10 +400,6 @@ function LetterCollectionPage(){
 
 
 
-        {/* Header */}
-
-
-
         <div
 
 
@@ -340,9 +412,10 @@ function LetterCollectionPage(){
 
 
 
+
           <div className="text-6xl">
 
-            {collection.icon}
+            {currentCollection.icon}
 
           </div>
 
@@ -363,11 +436,9 @@ function LetterCollectionPage(){
 
           >
 
-            {collection.title}
+            {currentCollection.title}
 
           </h1>
-
-
 
 
 
@@ -386,7 +457,7 @@ function LetterCollectionPage(){
 
           >
 
-            {collection.subtitle}
+            {currentCollection.subtitle}
 
           </p>
 
@@ -402,183 +473,88 @@ function LetterCollectionPage(){
 
 
 
-        {/* Letter Cards */}
+        {
+          loading && (
+
+            <p className="
+              mt-20
+              text-center
+              text-white/50
+            ">
+
+              Discovering letters...
+
+            </p>
+
+          )
+        }
 
 
 
-        <div
 
 
-          className="
-            mt-20
-            grid
-            gap-8
-            md:grid-cols-2
-          "
-
-
-        >
 
 
 
 
         {
 
-          collection.letters.map(
+          !loading && letters.length===0 && (
 
-            (letter:any,index:number)=>(
 
+            <div
 
-              <motion.button
 
+              className="
+                mt-20
+                rounded-3xl
+                border
+                border-white/10
+                bg-white/[0.04]
+                p-12
+                text-center
+              "
 
 
-                key={index}
+            >
 
 
+              <div className="text-5xl">
 
-                whileHover={{
+                {currentCollection.icon}
 
-                  y:-8,
+              </div>
 
-                  scale:1.03
 
-                }}
 
 
+              <h2 className="
+                mt-6
+                text-2xl
+                font-light
+              ">
 
-                onClick={()=>setSelectedLetter(letter)}
+                No letters yet
 
+              </h2>
 
 
-                className="
-                  group
-                  cursor-pointer
-                  rounded-3xl
-                  border
-                  border-white/10
-                  bg-white/[0.04]
-                  p-10
-                  text-left
-                  backdrop-blur-xl
-                  transition
-                  hover:border-pink-300/40
-                "
 
 
 
-              >
+              <p className="
+                mt-4
+                text-white/60
+              ">
 
+                This collection is waiting for its first letter.
 
+              </p>
 
 
 
-                <motion.div
+            </div>
 
-
-                  animate={{
-
-                    y:[0,-8,0]
-
-                  }}
-
-
-
-                  transition={{
-
-                    duration:3,
-
-                    repeat:Infinity
-
-                  }}
-
-
-
-                  className="text-5xl"
-
-                >
-
-                  💌
-
-                </motion.div>
-
-
-
-
-
-
-
-                <h2
-
-
-                  className="
-                    mt-6
-                    text-2xl
-                    font-light
-                  "
-
-
-                >
-
-                  {letter.title}
-
-                </h2>
-
-
-
-
-
-
-
-
-                <p
-
-
-                  className="
-                    mt-3
-                    text-sm
-                    text-white/50
-                  "
-
-
-                >
-
-                  {letter.date}
-
-                </p>
-
-
-
-
-
-
-
-
-                <p
-
-
-                  className="
-                    mt-8
-                    text-xs
-                    tracking-[0.3em]
-                    text-purple-300
-                  "
-
-
-                >
-
-                  OPEN LETTER →
-
-                </p>
-
-
-
-
-
-              </motion.button>
-
-
-            )
 
           )
 
@@ -587,7 +563,315 @@ function LetterCollectionPage(){
 
 
 
+
+
+
+
+
+        <div
+
+
+          className="
+            mt-16
+            space-y-8
+          "
+
+
+        >
+
+
+
+
+
+
+        {
+
+          letters.map((letter)=>(
+
+
+
+
+            <motion.button
+
+
+
+              key={letter.id}
+
+
+
+           onClick={()=>{
+
+    console.log(
+      "Clicked letter:",
+      letter.id
+    );
+
+
+    navigate(
+      `/letters/${category}/${letter.id}`
+    );
+
+  }}
+
+
+
+              whileHover={{
+
+                y:-8,
+
+                scale:1.01
+
+              }}
+
+
+
+
+
+              className={`
+
+                group
+                w-full
+                cursor-pointer
+                rounded-3xl
+                border
+                p-10
+                text-left
+                backdrop-blur-xl
+                transition
+
+
+                ${
+                  letter.authorName
+                  ?.toLowerCase()
+                  .trim() === "eraya"
+
+
+                  ?
+
+                  "border-pink-300/40 bg-pink-500/5"
+
+
+                  :
+
+
+                  "border-blue-300/40 bg-blue-500/5"
+
+
+                }
+
+              `}
+
+
+
+            >
+
+
+
+
+
+
+
+              <div className="relative text-5xl">
+
+
+
+                {currentCollection.icon}
+
+
+
+
+
+
+
+                {
+
+                  currentUser &&
+
+                  letter.authorId !== currentUser.uid &&
+
+                  !letter.viewedBy?.includes(
+
+                    currentUser.uid
+
+                  )
+
+                  &&
+
+                  (
+
+                    <span
+
+
+                      className="
+                        absolute
+                        -right-8
+                        -top-5
+                        rounded-full
+                        bg-pink-500
+                        px-3
+                        py-1
+                        text-[10px]
+                        tracking-widest
+                        text-white
+                      "
+
+
+                    >
+
+                      NEW ✨
+
+
+                    </span>
+
+
+                  )
+
+
+                }
+
+
+
+              </div>
+
+
+
+
+
+
+
+
+
+              <h2
+
+
+                className="
+                  mt-6
+                  text-3xl
+                  font-light
+                "
+
+
+              >
+
+                {letter.title}
+
+
+              </h2>
+
+
+
+
+
+
+
+
+
+              <p
+
+
+                className="
+                  mt-5
+                  leading-relaxed
+                  text-white/70
+                "
+
+
+              >
+
+                {
+
+                  letter.content
+
+                  ?.slice(0,150)
+
+                }
+
+                ...
+
+              </p>
+
+
+
+
+
+
+
+
+
+              <div
+
+
+                className="
+                  mt-8
+                  flex
+                  justify-between
+                  text-xs
+                  tracking-widest
+                  text-white/50
+                "
+
+
+              >
+
+
+
+                <span>
+
+                  Created by {letter.authorName || "Unknown"}
+
+                </span>
+
+
+
+
+
+                <span>
+
+
+                  {
+
+                    letter.createdAt
+
+                    ?
+
+                    letter.createdAt
+                    .toDate()
+                    .toLocaleDateString()
+
+                    :
+
+                    ""
+
+                  }
+
+
+                </span>
+
+
+
+
+              </div>
+
+
+
+
+
+
+            </motion.button>
+
+
+
+          ))
+
+
+        }
+
+
+
+
+
         </div>
+
 
 
 
@@ -601,42 +885,9 @@ function LetterCollectionPage(){
 
 
 
-
-
-
-
-      {
-        selectedLetter && (
-
-
-          <LetterModal
-
-
-            title={selectedLetter.title}
-
-
-            date={selectedLetter.date}
-
-
-            content={selectedLetter.content}
-
-
-            onClose={()=>setSelectedLetter(null)}
-
-
-          />
-
-
-        )
-      }
-
-
-
-
-
-
-
     </div>
+
+
 
   );
 

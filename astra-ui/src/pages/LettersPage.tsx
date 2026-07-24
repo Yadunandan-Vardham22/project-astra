@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import HomeButton from "../components/HomeButton";
-
+import AddLetterModal from "../components/AddLetterModal";
 
 
 const letters = [
@@ -15,6 +16,15 @@ const letters = [
 
 
   {
+    id:"angry",
+    icon:"🔥",
+    title:"Angry Letters",
+    description:
+    "Words written in moments of frustration, honesty and emotions left unspoken."
+  },
+
+
+  {
     id:"apologies",
     icon:"🌧",
     title:"Apology Letters",
@@ -24,29 +34,11 @@ const letters = [
 
 
   {
-    id:"future",
-    icon:"🌌",
-    title:"Future Us",
-    description:
-    "Messages saved for moments that have not arrived yet."
-  },
-
-
-  {
     id:"dream-journal",
     icon:"🌙",
     title:"Dream Journal",
     description:
     "A place to preserve the strange, beautiful worlds visited while sleeping."
-  },
-
-
-  {
-    id:"hidden",
-    icon:"✨",
-    title:"Hidden Letters",
-    description:
-    "Secret messages waiting to be discovered."
   }
 
 ];
@@ -60,7 +52,8 @@ function LettersPage(){
 
   const navigate = useNavigate();
 
-
+ const [showAddLetter,setShowAddLetter] =
+    useState(false);
 
   return (
 
@@ -440,9 +433,52 @@ function LettersPage(){
 
       </div>
 
+<button
+
+
+  onClick={()=>setShowAddLetter(true)}
 
 
 
+  className="
+    fixed
+    bottom-32
+    right-10
+    cursor-pointer
+    rounded-full
+    border
+    border-pink-300/40
+    bg-pink-500/20
+    px-6
+    py-4
+    text-xs
+    tracking-widest
+    backdrop-blur-xl
+  "
+
+
+>
+
+  + WRITE LETTER 💌
+
+</button>
+
+{
+  showAddLetter && (
+
+    <AddLetterModal
+
+      onClose={()=>
+        setShowAddLetter(false)
+      }
+
+
+      onAdded={()=>{}}
+
+    />
+
+  )
+}
 
     </div>
 

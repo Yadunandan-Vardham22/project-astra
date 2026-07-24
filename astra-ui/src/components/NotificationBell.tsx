@@ -9,7 +9,8 @@ import {
   onSnapshot,
   orderBy,
   doc,
-  getDoc
+  getDoc,
+  updateDoc
 } from "firebase/firestore";
 
 
@@ -30,10 +31,13 @@ import {
 
 
 
+
 function NotificationBell(){
 
 
+
   const navigate = useNavigate();
+
 
 
   const [open,setOpen] =
@@ -74,6 +78,7 @@ function NotificationBell(){
 
 
           if(!user)
+
             return;
 
 
@@ -81,6 +86,7 @@ function NotificationBell(){
 
 
           const userRef =
+
             doc(
 
               db,
@@ -96,6 +102,7 @@ function NotificationBell(){
 
 
           const userSnapshot =
+
             await getDoc(userRef);
 
 
@@ -103,6 +110,7 @@ function NotificationBell(){
 
 
           if(!userSnapshot.exists())
+
             return;
 
 
@@ -110,6 +118,7 @@ function NotificationBell(){
 
 
           const data =
+
             userSnapshot.data();
 
 
@@ -119,7 +128,9 @@ function NotificationBell(){
           const currentStarName =
 
             (
+
               data.starName || ""
+
             ).toLowerCase();
 
 
@@ -127,6 +138,7 @@ function NotificationBell(){
 
 
           if(!currentStarName)
+
             return;
 
 
@@ -140,6 +152,7 @@ function NotificationBell(){
 
             query(
 
+
               collection(
 
                 db,
@@ -147,6 +160,7 @@ function NotificationBell(){
                 "notifications"
 
               ),
+
 
 
 
@@ -162,6 +176,7 @@ function NotificationBell(){
 
 
 
+
               orderBy(
 
                 "createdAt",
@@ -169,6 +184,7 @@ function NotificationBell(){
                 "desc"
 
               )
+
 
             );
 
@@ -183,7 +199,9 @@ function NotificationBell(){
 
             onSnapshot(
 
+
               notificationQuery,
+
 
               (snapshot)=>{
 
@@ -210,6 +228,7 @@ function NotificationBell(){
               },
 
 
+
               (error)=>{
 
 
@@ -229,6 +248,7 @@ function NotificationBell(){
 
 
 
+
         }
 
 
@@ -240,10 +260,12 @@ function NotificationBell(){
 
 
 
+
     return ()=>{
 
 
       unsubscribeAuth();
+
 
 
       if(unsubscribeNotifications)
@@ -291,7 +313,9 @@ function NotificationBell(){
 
       ){
 
+
         setOpen(false);
+
 
       }
 
@@ -329,8 +353,69 @@ function NotificationBell(){
     };
 
 
-
   },[bellRef]);
+
+
+
+
+
+
+
+
+
+
+
+
+  async function markNotificationsRead(){
+
+
+
+    const unreadNotifications =
+
+      notifications.filter(
+
+        notification =>
+
+          notification.read === false
+
+      );
+
+
+
+
+
+    for(const notification of unreadNotifications){
+
+
+      await updateDoc(
+
+
+        doc(
+
+          db,
+
+          "notifications",
+
+          notification.id
+
+        ),
+
+
+        {
+
+          read:true
+
+        }
+
+
+      );
+
+
+    }
+
+
+
+  }
 
 
 
@@ -350,6 +435,9 @@ function NotificationBell(){
     setOpen(true);
 
 
+    markNotificationsRead();
+
+
   }
 
 
@@ -367,9 +455,11 @@ function NotificationBell(){
 
     notifications.filter(
 
-      notification=>
 
-        notification.read===false
+      notification =>
+
+        notification.read === false
+
 
     ).length;
 
@@ -381,17 +471,25 @@ function NotificationBell(){
 
 
 
+
+
+
   return (
+
 
     <div
 
+
       ref={setBellRef}
+
 
       className="
         relative
       "
 
+
     >
+
 
 
 
@@ -400,20 +498,26 @@ function NotificationBell(){
       <button
 
 
+
         onClick={()=>{
 
 
           if(open){
 
+
             setOpen(false);
+
 
           }
 
           else{
 
+
             openNotifications();
 
+
           }
+
 
 
         }}
@@ -431,7 +535,10 @@ function NotificationBell(){
 
       >
 
+
         🔔
+
+
 
 
 
@@ -444,6 +551,7 @@ function NotificationBell(){
 
             <span
 
+
               className="
                 absolute
                 -right-2
@@ -454,6 +562,7 @@ function NotificationBell(){
                 text-xs
                 text-white
               "
+
 
             >
 
@@ -482,9 +591,11 @@ function NotificationBell(){
       <AnimatePresence>
 
 
+
       {
 
         open && (
+
 
 
           <motion.div
@@ -540,13 +651,17 @@ function NotificationBell(){
 
 
 
+
+
             <h2
+
 
               className="
                 mb-5
                 text-sm
                 tracking-widest
               "
+
 
             >
 
@@ -562,12 +677,12 @@ function NotificationBell(){
 
 
 
-
             {
 
               notifications.length===0
 
               ?
+
 
 
               <p
@@ -585,6 +700,7 @@ function NotificationBell(){
               </p>
 
 
+
               :
 
 
@@ -599,6 +715,7 @@ function NotificationBell(){
 
 
 
+
               {
 
                 notifications.map(notification=>(
@@ -610,12 +727,15 @@ function NotificationBell(){
                     key={notification.id}
 
 
+
                     onClick={()=>{
 
 
                       if(
 
-                        notification.type === "observatory" &&
+                        notification.type === "observatory"
+
+                        &&
 
                         notification.metadata?.storyId
 
@@ -632,10 +752,59 @@ function NotificationBell(){
                         setOpen(false);
 
 
+                        return;
+
+
                       }
 
 
+
+
+
+
+
+                      if(
+
+                        notification.type === "letter"
+
+                        &&
+
+                        notification.metadata?.letterId
+
+                      ){
+
+
+
+                        navigate(
+
+                          `/letters/${
+
+                            notification.metadata.category
+
+                          }/${
+
+                            notification.metadata.letterId
+
+                          }`
+
+                        );
+
+
+
+                        setOpen(false);
+
+
+
+                        return;
+
+
+                      }
+
+
+
+
                     }}
+
 
 
                     className="
@@ -653,6 +822,8 @@ function NotificationBell(){
 
 
 
+
+
                     <p className="text-sm">
 
 
@@ -665,7 +836,10 @@ function NotificationBell(){
 
 
 
+
+
                     <p
+
 
                       className="
                         mt-2
@@ -673,13 +847,15 @@ function NotificationBell(){
                         text-white/60
                       "
 
-                    >
 
+                    >
 
                       {notification.message}
 
 
                     </p>
+
+
 
 
 
@@ -689,7 +865,9 @@ function NotificationBell(){
                 ))
 
 
+
               }
+
 
 
 
@@ -697,6 +875,7 @@ function NotificationBell(){
 
 
             }
+
 
 
 
@@ -711,7 +890,11 @@ function NotificationBell(){
       }
 
 
+
       </AnimatePresence>
+
+
+
 
 
 
@@ -719,9 +902,11 @@ function NotificationBell(){
 
     </div>
 
+
   );
 
 }
+
 
 
 

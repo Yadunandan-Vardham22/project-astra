@@ -5,11 +5,9 @@ import {
 } from "react-router-dom";
 
 
-
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import VerifyPage from "./pages/VerifyPage";
-
 
 import HomePage from "./pages/HomePage";
 
@@ -20,6 +18,7 @@ import ChapterPage from "./pages/ChapterPage";
 
 import LettersPage from "./pages/LettersPage";
 import LetterCollectionPage from "./pages/LetterCollectionPage";
+import LetterPage from "./pages/LetterPage";
 
 
 import QuizPage from "./pages/QuizPage";
@@ -37,12 +36,7 @@ import UniverseLayout from "./layouts/UniverseLayout";
 
 
 
-
-
-
-
 function App(){
-
 
 
   return (
@@ -54,11 +48,7 @@ function App(){
       <Routes>
 
 
-
-
-
         {/* Public Universe */}
-
 
 
         <Route
@@ -70,9 +60,6 @@ function App(){
         />
 
 
-
-
-
         <Route
 
           path="/login"
@@ -80,9 +67,6 @@ function App(){
           element={<LoginPage />}
 
         />
-
-
-
 
 
         <Route
@@ -96,20 +80,14 @@ function App(){
 
 
 
-
-
-
-
-
         {/* Astra Universe */}
+
 
         <Route
 
           element={<UniverseLayout />}
 
         >
-
-
 
 
 
@@ -124,13 +102,7 @@ function App(){
 
 
 
-
-
-
-
-
           {/* Observatory */}
-
 
 
           <Route
@@ -140,7 +112,6 @@ function App(){
             element={<ObservatoryPage />}
 
           />
-
 
 
           <Route
@@ -155,12 +126,7 @@ function App(){
 
 
 
-
-
-
-
           {/* Letters */}
-
 
 
           <Route
@@ -172,7 +138,6 @@ function App(){
           />
 
 
-
           <Route
 
             path="/letters/:category"
@@ -182,15 +147,19 @@ function App(){
           />
 
 
+          <Route
 
+            path="/letters/:category/:letterId"
 
+            element={<LetterPage />}
+
+          />
 
 
 
 
 
           {/* Quiz */}
-
 
 
           <Route
@@ -200,7 +169,6 @@ function App(){
             element={<QuizPage />}
 
           />
-
 
 
           <Route
@@ -215,12 +183,7 @@ function App(){
 
 
 
-
-
-
-
           {/* Other Realms */}
-
 
 
           <Route
@@ -232,7 +195,6 @@ function App(){
           />
 
 
-
           <Route
 
             path="/bucket-list"
@@ -240,7 +202,6 @@ function App(){
             element={<BucketListPage />}
 
           />
-
 
 
           <Route
@@ -252,7 +213,6 @@ function App(){
           />
 
 
-
           <Route
 
             path="/garden"
@@ -262,13 +222,7 @@ function App(){
           />
 
 
-
-
-
         </Route>
-
-
-
 
 
       </Routes>
