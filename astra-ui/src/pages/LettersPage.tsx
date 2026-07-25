@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import HomeButton from "../components/HomeButton";
 import AddLetterModal from "../components/AddLetterModal";
 
 const letters = [

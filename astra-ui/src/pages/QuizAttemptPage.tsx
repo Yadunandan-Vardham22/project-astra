@@ -214,7 +214,7 @@ function QuizAttemptPage(){
       if(snapshot.exists()){
 
 
-        const data = {
+        const data: any = {
 
 
           id:snapshot.id,

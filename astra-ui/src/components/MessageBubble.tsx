@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 interface MessageBubbleProps {
   text: string;
   senderName: string;

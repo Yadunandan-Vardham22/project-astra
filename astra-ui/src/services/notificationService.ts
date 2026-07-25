@@ -27,6 +27,8 @@ interface NotificationPayload {
 
   metadata?:any;
 
+  referenceId?: string;
+
 }
 
 

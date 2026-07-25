@@ -22,6 +22,9 @@ function MeteorCanvas() {
 
     if (!ctx) return;
 
+    const safeCanvas = canvas;
+const safeCtx = ctx;
+
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
@@ -51,12 +54,12 @@ function MeteorCanvas() {
     }
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      safeCtx.clearRect(0, 0, safeCanvas.width, safeCanvas.height);
 
       // Stop once meteor leaves screen
       if (
         meteor.x > -200 &&
-        meteor.y < canvas.height + 200
+        meteor.y < safeCanvas.height + 200
       ) {
         updateMeteor();
 
@@ -72,18 +75,18 @@ function MeteorCanvas() {
         );
 
         drawParticles(
-          ctx,
+          safeCtx,
           particles,
           meteor
         );
 
         drawSparks(
-          ctx,
+          safeCtx,
           sparks
         );
 
         drawMeteor(
-          ctx,
+          safeCtx,
           meteor
         );
       }

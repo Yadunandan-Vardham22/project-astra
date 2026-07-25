@@ -21,8 +21,11 @@ function CursorParticles() {
 
     if (!ctx) return;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const safeCanvas = canvas;
+const safeCtx = ctx;
+
+    safeCanvas .width = window.innerWidth;
+    safeCanvas .height = window.innerHeight;
 
     const particles: Particle[] = [];
 
@@ -49,11 +52,11 @@ function CursorParticles() {
     );
 
     function animate() {
-      ctx.clearRect(
+      safeCtx.clearRect(
         0,
         0,
-        canvas.width,
-        canvas.height
+        safeCanvas .width,
+        safeCanvas .height
       );
 
       particles.forEach((particle) => {
@@ -62,9 +65,9 @@ function CursorParticles() {
 
         particle.life -= 0.02;
 
-        ctx.beginPath();
+        safeCtx.beginPath();
 
-        ctx.fillStyle = `
+        safeCtx.fillStyle = `
           rgba(
             190,
             220,
@@ -73,12 +76,12 @@ function CursorParticles() {
           )
         `;
 
-        ctx.shadowBlur = 15;
+        safeCtx.shadowBlur = 15;
 
-        ctx.shadowColor =
+        safeCtx.shadowColor =
           "rgba(170,210,255,0.9)";
 
-        ctx.arc(
+        safeCtx.arc(
           particle.x,
           particle.y,
           particle.size,
@@ -86,7 +89,7 @@ function CursorParticles() {
           Math.PI * 2
         );
 
-        ctx.fill();
+        safeCtx.fill();
       });
 
       for (

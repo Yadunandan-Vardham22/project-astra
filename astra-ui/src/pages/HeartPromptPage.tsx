@@ -185,10 +185,6 @@ function HeartPromptPage(){
     const isAuthor =
     prompt?.authorId === currentUserId;
 
-  const canAnswer =
-    prompt &&
-    !isAuthor &&
-    !prompt.answered;
 
   return (
 

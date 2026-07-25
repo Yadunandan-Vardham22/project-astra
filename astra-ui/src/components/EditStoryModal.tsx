@@ -136,7 +136,7 @@ function EditStoryModal({
 
             .filter(
 
-              q=>q.trim()!==""
+              (q: string) => q.trim() !== ""
 
             )
 
