@@ -28,6 +28,7 @@ import type {
 
 
 import BackButton from "../components/BackButton";
+import EditLetterModal from "../components/EditLetterModal";
 
 const collectionInfo:any = {
 
@@ -734,7 +735,15 @@ const collection =
 
 
 
-
+      {editOpen && (
+        <EditLetterModal
+          letter={letter}
+          onClose={() => setEditOpen(false)}
+          onUpdated={() => {
+            fetchLetter();
+          }}
+        />
+      )}
 
     </div>
 
