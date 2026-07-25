@@ -1,9 +1,13 @@
-import { useState } from "react";
+import {
+  useState
+} from "react";
+
 
 import {
   doc,
   updateDoc
 } from "firebase/firestore";
+
 
 import {
   db
@@ -13,13 +17,19 @@ import {
 
 
 
-interface EditStoryModalProps {
 
-  story:any;
+
+interface EditBucketModalProps {
+
+
+  bucket:any;
+
 
   onClose:()=>void;
 
+
   onUpdated:()=>void;
+
 
 }
 
@@ -29,62 +39,88 @@ interface EditStoryModalProps {
 
 
 
-function EditStoryModal({
 
-  story,
+function EditBucketModal({
+
+  bucket,
 
   onClose,
 
   onUpdated
 
-}:EditStoryModalProps){
-
-
-
-  const [title,setTitle]=useState(
-    story.title || ""
-  );
-
-
-  const [description,setDescription]=useState(
-    story.description || ""
-  );
-
-
-  const [backgroundImage,setBackgroundImage]=useState(
-    story.backgroundImage || ""
-  );
-
-
-  const [quotes,setQuotes]=useState(
-
-    story.quotes
-    ?
-    story.quotes.join("\n")
-    :
-    ""
-
-  );
-
-
-  const [saving,setSaving]=useState(false);
-
-
-  const [error,setError]=useState("");
+}:EditBucketModalProps){
 
 
 
 
 
+  const [title,setTitle] =
+
+    useState(bucket.title || "");
+
+
+
+  const [shortDescription,setShortDescription] =
+
+    useState(bucket.shortDescription || "");
+
+
+
+  const [details,setDetails] =
+
+    useState(bucket.details || "");
 
 
 
 
-  async function updateStory(){
+  const [saving,setSaving] =
+
+    useState(false);
 
 
 
-    setError("");
+  const [error,setError] =
+
+    useState("");
+
+
+
+
+
+
+
+
+
+  async function updateBucket(){
+
+
+
+    if(
+
+      !title ||
+
+      !shortDescription ||
+
+      !details
+
+    ){
+
+
+      setError(
+
+        "All fields are required."
+
+      );
+
+
+      return;
+
+
+    }
+
+
+
+
 
 
 
@@ -95,25 +131,21 @@ function EditStoryModal({
 
 
 
-
-
-      const storyRef = doc(
-
-        db,
-
-        "stories",
-
-        story.id
-
-      );
-
-
-
-
-
       await updateDoc(
 
-        storyRef,
+
+
+        doc(
+
+          db,
+
+          "bucketLists",
+
+          bucket.id
+
+        ),
+
+
 
         {
 
@@ -121,34 +153,24 @@ function EditStoryModal({
           title,
 
 
-          description,
+          shortDescription,
 
 
-          backgroundImage,
+          details
 
 
-
-          quotes:
-
-            quotes
-
-            .split("\n")
-
-            .filter(
-
-              q=>q.trim()!==""
-
-            )
 
         }
+
+
 
       );
 
 
 
 
-
       onUpdated();
+
 
       onClose();
 
@@ -156,20 +178,32 @@ function EditStoryModal({
 
     }
 
+
+
     catch(error){
 
 
+
       console.error(
+
+        "Error updating bucket:",
+
         error
+
       );
 
 
+
       setError(
-        "Unable to update story."
+
+        "Something went wrong."
+
       );
 
 
     }
+
+
 
     finally{
 
@@ -178,6 +212,7 @@ function EditStoryModal({
 
 
     }
+
 
 
 
@@ -192,6 +227,8 @@ function EditStoryModal({
 
 
   return (
+
+
 
     <div
 
@@ -219,6 +256,7 @@ function EditStoryModal({
 
 
 
+
       <div
 
 
@@ -228,16 +266,13 @@ function EditStoryModal({
 
         className="
           w-full
-          max-w-2xl
-          max-h-[90vh]
-          overflow-y-auto
+          max-w-xl
           rounded-3xl
           border
           border-white/10
           bg-black/90
           p-10
           text-white
-          scrollbar-hide
         "
 
 
@@ -247,19 +282,19 @@ function EditStoryModal({
 
 
 
-        <h2
 
-          className="
-            text-center
-            text-3xl
-            font-light
-          "
 
-        >
+        <h2 className="
+          text-center
+          text-3xl
+          font-light
+        ">
 
-          Edit Story ✦
+          Edit Bucket Wish 🌌
 
         </h2>
+
+
 
 
 
@@ -275,13 +310,19 @@ function EditStoryModal({
 
 
           onChange={(e)=>
+
             setTitle(e.target.value)
+
           }
 
 
 
+          placeholder="Title"
+
+
+
           className="
-            mt-8
+            mt-6
             w-full
             rounded-xl
             border
@@ -294,44 +335,6 @@ function EditStoryModal({
 
         />
 
-
-
-
-
-
-
-
-
-        <textarea
-
-
-          value={description}
-
-
-
-          onChange={(e)=>
-            setDescription(e.target.value)
-          }
-
-
-
-          rows={7}
-
-
-
-          className="
-            mt-4
-            w-full
-            rounded-xl
-            border
-            border-white/10
-            bg-white/5
-            p-4
-            outline-none
-          "
-
-
-        />
 
 
 
@@ -343,17 +346,27 @@ function EditStoryModal({
         <input
 
 
-          value={backgroundImage}
+          value={shortDescription}
+
+
+
+          maxLength={120}
 
 
 
           onChange={(e)=>
-            setBackgroundImage(e.target.value)
+
+            setShortDescription(
+
+              e.target.value
+
+            )
+
           }
 
 
 
-          placeholder="Background image URL"
+          placeholder="Short description"
 
 
 
@@ -382,21 +395,27 @@ function EditStoryModal({
         <textarea
 
 
-          value={quotes}
+          value={details}
 
 
 
           onChange={(e)=>
-            setQuotes(e.target.value)
+
+            setDetails(
+
+              e.target.value
+
+            )
+
           }
 
 
 
-          rows={3}
+          placeholder="Details"
 
 
 
-          placeholder="Quotes"
+          rows={8}
 
 
 
@@ -421,25 +440,28 @@ function EditStoryModal({
 
 
 
+
         {
+
           error && (
 
-            <p
 
-              className="
-                mt-4
-                text-center
-                text-red-300
-              "
-
-            >
+            <p className="
+              mt-4
+              text-center
+              text-sm
+              text-red-300
+            ">
 
               {error}
 
             </p>
 
+
           )
+
         }
+
 
 
 
@@ -451,18 +473,18 @@ function EditStoryModal({
         <button
 
 
+          onClick={updateBucket}
+
+
+
           disabled={saving}
 
 
 
-          onClick={updateStory}
-
-
-
           className="
-          cursor-pointer
             mt-8
             w-full
+            cursor-pointer
             rounded-full
             border
             border-purple-300/30
@@ -475,6 +497,8 @@ function EditStoryModal({
 
         >
 
+
+
           {
 
             saving
@@ -485,9 +509,11 @@ function EditStoryModal({
 
             :
 
-            "UPDATE STORY ✦"
+            "SAVE CHANGES ✨"
+
 
           }
+
 
 
         </button>
@@ -504,7 +530,10 @@ function EditStoryModal({
 
 
 
+
+
     </div>
+
 
   );
 
@@ -512,4 +541,5 @@ function EditStoryModal({
 
 
 
-export default EditStoryModal;
+
+export default EditBucketModal;

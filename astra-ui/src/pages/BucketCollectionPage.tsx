@@ -1,14 +1,24 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState
+} from "react";
 
-import { motion } from "framer-motion";
+
+import {
+  useNavigate
+} from "react-router-dom";
+
+
+import {
+  motion
+} from "framer-motion";
+
 
 import {
   collection,
   query,
-  where,
-  onSnapshot,
-  orderBy
+  orderBy,
+  onSnapshot
 } from "firebase/firestore";
 
 
@@ -23,67 +33,7 @@ import {
 } from "../firebase/firebaseConfig";
 
 
-import BackButton from "../components/BackButton";
-
-
-
-
-
-
-
-const collectionInfo:any = {
-
-  love:{
-
-    icon:"💗",
-
-    title:"Love Letters",
-
-    subtitle:"Words written from the heart."
-
-  },
-
-  angry:{
-
-    icon:"🔥",
-
-    title:"Angry Letters",
-
-    subtitle:"Words written in moments of frustration and emotions left unspoken."
-
-  },
-
-  apologies:{
-
-    icon:"🌧",
-
-    title:"Apology Letters",
-
-    subtitle:"Words after storms."
-
-  },
-
-  "dream-journal":{
-
-    icon:"🌙",
-
-    title:"Dream Journal",
-
-    subtitle:"Worlds that existed while we slept."
-
-  },
-
-  confessions:{
-
-    icon:"🤍",
-
-    title:"Confession Box",
-
-    subtitle:"The quiet truths we were never brave enough to say out loud."
-
-  }
-
-};
+import AddBucketModal from "../components/AddBucketModal";
 
 
 
@@ -92,8 +42,7 @@ const collectionInfo:any = {
 
 
 
-
-function LetterCollectionPage(){
+function BucketCollectionPage(){
 
 
 
@@ -101,17 +50,23 @@ function LetterCollectionPage(){
 
 
 
-  const {
-    category
-  } = useParams();
 
 
-
-
-  const [letters,setLetters] =
+  const [buckets,setBuckets] =
 
     useState<any[]>([]);
 
+
+
+  const [currentUser,setCurrentUser] =
+
+    useState<any>(null);
+
+
+
+  const [addOpen,setAddOpen] =
+
+    useState(false);
 
 
 
@@ -120,11 +75,6 @@ function LetterCollectionPage(){
     useState(true);
 
 
-
-
-  const [currentUser,setCurrentUser] =
-
-    useState<any>(null);
 
 
 
@@ -169,19 +119,11 @@ function LetterCollectionPage(){
 
 
 
-
-
-
   useEffect(()=>{
 
 
-    if(!category)
 
-      return;
-
-
-
-    const lettersQuery = query(
+    const bucketQuery = query(
 
 
 
@@ -189,20 +131,7 @@ function LetterCollectionPage(){
 
         db,
 
-        "letters"
-
-      ),
-
-
-
-
-      where(
-
-        "category",
-
-        "==",
-
-        category
+        "bucketLists"
 
       ),
 
@@ -226,21 +155,24 @@ function LetterCollectionPage(){
 
 
 
+
     const unsubscribe =
 
       onSnapshot(
 
 
 
-        lettersQuery,
+        bucketQuery,
 
 
 
         (snapshot)=>{
 
-
+  console.log(
+        "BUCKET SNAPSHOT SIZE:",
+        snapshot.size
+      );
           const data =
-
 
             snapshot.docs.map(doc=>({
 
@@ -253,10 +185,13 @@ function LetterCollectionPage(){
 
             }));
 
+   console.log(
+        "BUCKET DATA:",
+        data
+      );
 
 
-          setLetters(data);
-
+          setBuckets(data);
 
 
           setLoading(false);
@@ -272,7 +207,7 @@ function LetterCollectionPage(){
 
           console.error(
 
-            "Error fetching letters:",
+            "Bucket listener error:",
 
             error
 
@@ -285,7 +220,9 @@ function LetterCollectionPage(){
         }
 
 
+
       );
+
 
 
 
@@ -295,51 +232,7 @@ function LetterCollectionPage(){
 
 
 
-  },[category]);
-
-
-
-
-
-
-
-
-
-  const currentCollection =
-
-    collectionInfo[category || "love"];
-
-
-
-
-
-
-  if(!currentCollection){
-
-
-    return (
-
-      <div
-
-        className="
-          min-h-screen
-          flex
-          items-center
-          justify-center
-          bg-black
-          text-white
-        "
-
-      >
-
-        Collection not found
-
-      </div>
-
-    );
-
-
-  }
+  },[]);
 
 
 
@@ -373,19 +266,6 @@ function LetterCollectionPage(){
 
 
 
-      <BackButton
-
-        path="/letters"
-
-        label="Letters"
-
-      />
-
-
-
-
-
-
 
 
       <div
@@ -398,6 +278,7 @@ function LetterCollectionPage(){
 
 
       >
+
 
 
 
@@ -418,11 +299,13 @@ function LetterCollectionPage(){
 
 
 
+
           <div className="text-6xl">
 
-            {currentCollection.icon}
+            🌌
 
           </div>
+
 
 
 
@@ -441,9 +324,10 @@ function LetterCollectionPage(){
 
           >
 
-            {currentCollection.title}
+            Bucket List
 
           </h1>
+
 
 
 
@@ -462,9 +346,12 @@ function LetterCollectionPage(){
 
           >
 
-            {currentCollection.subtitle}
+            Dreams waiting to become memories.
 
           </p>
+
+
+
 
 
 
@@ -478,8 +365,20 @@ function LetterCollectionPage(){
 
 
 
+   
+
+
+
+
+
+
+
+
+
         {
+
           loading && (
+
 
             <p className="
               mt-20
@@ -487,11 +386,13 @@ function LetterCollectionPage(){
               text-white/50
             ">
 
-              Discovering letters...
+              Discovering dreams...
 
             </p>
 
+
           )
+
         }
 
 
@@ -504,7 +405,7 @@ function LetterCollectionPage(){
 
         {
 
-          !loading && letters.length===0 && (
+          !loading && buckets.length===0 && (
 
 
             <div
@@ -526,10 +427,9 @@ function LetterCollectionPage(){
 
               <div className="text-5xl">
 
-                {currentCollection.icon}
+                🌌
 
               </div>
-
 
 
 
@@ -539,11 +439,9 @@ function LetterCollectionPage(){
                 font-light
               ">
 
-                No letters yet
+                No dreams yet
 
               </h2>
-
-
 
 
 
@@ -552,7 +450,7 @@ function LetterCollectionPage(){
                 text-white/60
               ">
 
-                This collection is waiting for its first letter.
+                Add the first wish to your universe.
 
               </p>
 
@@ -589,34 +487,27 @@ function LetterCollectionPage(){
 
 
 
+
         {
 
-          letters.map((letter)=>(
+          buckets.map(bucket=>(
+
+
+
+            <motion.div
+
+
+
+              key={bucket.id}
 
 
 
 
-            <motion.button
+              onClick={()=>navigate(
 
+                `/bucket-list/${bucket.id}`
 
-
-              key={letter.id}
-
-
-
-           onClick={()=>{
-
-    console.log(
-      "Clicked letter:",
-      letter.id
-    );
-
-
-    navigate(
-      `/letters/${category}/${letter.id}`
-    );
-
-  }}
+              )}
 
 
 
@@ -630,37 +521,27 @@ function LetterCollectionPage(){
 
 
 
-
-
               className={`
 
-                group
-                w-full
                 cursor-pointer
                 rounded-3xl
                 border
                 p-10
-                text-left
-                backdrop-blur-xl
                 transition
 
 
                 ${
-                  letter.authorName
+                  bucket.authorName
                   ?.toLowerCase()
-                  .trim() === "eraya"
-
+                  .trim()==="eraya"
 
                   ?
 
                   "border-pink-300/40 bg-pink-500/5"
 
-
                   :
 
-
                   "border-blue-300/40 bg-blue-500/5"
-
 
                 }
 
@@ -676,11 +557,18 @@ function LetterCollectionPage(){
 
 
 
-              <div className="relative text-5xl">
+
+              <div className="flex justify-between">
 
 
 
-                {currentCollection.icon}
+
+
+                <div className="text-5xl">
+
+                  🌌
+
+                </div>
 
 
 
@@ -690,11 +578,12 @@ function LetterCollectionPage(){
 
                 {
 
+
                   currentUser &&
 
-                  letter.authorId !== currentUser.uid &&
+                  bucket.authorId !== currentUser.uid &&
 
-                  !letter.viewedBy?.includes(
+                  !bucket.viewedBy?.includes(
 
                     currentUser.uid
 
@@ -704,35 +593,37 @@ function LetterCollectionPage(){
 
                   (
 
-                    <span
+
+    <span
 
 
-                      className="
-                        absolute
-                        -right-8
-                        -top-5
-                        rounded-full
-                        bg-pink-500
-                        px-3
-                        py-1
-                        text-[10px]
-                        tracking-widest
-                        text-white
-                      "
+className="
+  rounded-full
+    border
+    border-pink-300/40
+    bg-pink-400/10
+    px-3
+    py-3
+    text-[9px]
+    tracking-[0.25em]
+    text-pink-200
+    backdrop-blur-md
+"
 
 
-                    >
+>
 
-                      NEW ✨
+  NEW ✨
 
-
-                    </span>
+</span>
 
 
                   )
 
 
                 }
+
+
 
 
 
@@ -750,7 +641,7 @@ function LetterCollectionPage(){
 
 
                 className="
-                  mt-6
+                  mt-8
                   text-3xl
                   font-light
                 "
@@ -758,8 +649,7 @@ function LetterCollectionPage(){
 
               >
 
-                {letter.title}
-
+                {bucket.title}
 
               </h2>
 
@@ -775,23 +665,14 @@ function LetterCollectionPage(){
 
 
                 className="
-                  mt-5
-                  leading-relaxed
+                  mt-4
                   text-white/70
                 "
 
 
               >
 
-                {
-
-                  letter.content
-
-                  ?.slice(0,150)
-
-                }
-
-                ...
+                {bucket.shortDescription}
 
               </p>
 
@@ -820,9 +701,10 @@ function LetterCollectionPage(){
 
 
 
+
                 <span>
 
-                  Created by {letter.authorName || "Unknown"}
+                  Created by {bucket.authorName}
 
                 </span>
 
@@ -835,22 +717,17 @@ function LetterCollectionPage(){
 
                   {
 
-                    letter.createdAt
+                    bucket.createdAt &&
 
-                    ?
-
-                    letter.createdAt
+                    bucket.createdAt
                     .toDate()
                     .toLocaleDateString()
-
-                    :
-
-                    ""
 
                   }
 
 
                 </span>
+
 
 
 
@@ -862,14 +739,51 @@ function LetterCollectionPage(){
 
 
 
-            </motion.button>
 
+
+
+              {
+
+                bucket.completed && (
+
+
+                  <div
+
+                    className="
+                      mt-6
+                      text-xs
+                      tracking-widest
+                      text-green-300
+                    "
+
+                  >
+
+                    ✓ COMPLETED
+
+                  </div>
+
+
+                )
+
+              }
+
+
+
+
+
+
+
+            </motion.div>
 
 
           ))
 
 
+
         }
+
+
+
 
 
 
@@ -884,7 +798,72 @@ function LetterCollectionPage(){
 
 
 
+
       </div>
+
+
+
+
+
+<button
+
+
+  onClick={()=>setAddOpen(true)}
+
+
+
+  className="
+    fixed
+    bottom-28
+    right-8
+    z-[100]
+    cursor-pointer
+    rounded-full
+    border
+    border-purple-300/30
+    bg-purple-500/10
+    px-4
+    py-4
+    text-xs
+    tracking-[0.4em]
+    backdrop-blur-xl
+    transition
+    hover:bg-purple-500/20
+  "
+
+
+>
+
+  + ADD WISH 🌌
+
+</button>
+
+
+
+      {
+
+        addOpen && (
+
+
+          <AddBucketModal
+
+
+            onClose={()=>setAddOpen(false)}
+
+
+            onAdded={()=>{}}
+
+
+          />
+
+
+        )
+
+      }
+
+
+
+
 
 
 
@@ -893,11 +872,10 @@ function LetterCollectionPage(){
     </div>
 
 
-
   );
 
 }
 
 
 
-export default LetterCollectionPage;
+export default BucketCollectionPage;

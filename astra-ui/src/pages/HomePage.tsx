@@ -1,10 +1,19 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { 
+  useEffect, 
+  useState 
+} from "react";
+import { motion } from "framer-motion";
+
+import { 
+  useNavigate 
+} from "react-router-dom";
+
 
 import {
   onAuthStateChanged,
   signOut
 } from "firebase/auth";
+
 
 import {
   doc,
@@ -30,6 +39,7 @@ import NotificationBell from "../components/NotificationBell";
 
 
 
+
 function HomePage(){
 
 
@@ -38,33 +48,49 @@ function HomePage(){
 
 
 
+
   const [stardust,setStardust] =
+
     useState(0);
+
 
 
 
   const [starName,setStarName] =
+
     useState("");
+
 
 
 
   const [kisses,setKisses] =
+
     useState(0);
+
 
 
 
   const [sweetKisses,setSweetKisses] =
+
     useState(0);
+
 
 
 
   const [lipLocks,setLipLocks] =
+
     useState(0);
 
 
 
+
   const [latestNote,setLatestNote] =
+
     useState("");
+
+
+
+
 
 
 
@@ -87,6 +113,7 @@ function HomePage(){
 
 
           if(!user)
+
             return;
 
 
@@ -94,6 +121,7 @@ function HomePage(){
 
 
           const userRef =
+
             doc(
 
               db,
@@ -108,11 +136,15 @@ function HomePage(){
 
 
 
+
+
           const unsubscribeUser =
 
             onSnapshot(
 
+
               userRef,
+
 
               (snapshot)=>{
 
@@ -120,8 +152,11 @@ function HomePage(){
                 if(snapshot.exists()){
 
 
+
                   const data =
+
                     snapshot.data();
+
 
 
 
@@ -137,21 +172,13 @@ function HomePage(){
 
 
 
-                  setStardust(
-
-                    data.stardust || 0
-
-                  );
-
-
-
-
 
                   setKisses(
 
                     data.kissesReceived || 0
 
                   );
+
 
 
 
@@ -167,11 +194,13 @@ function HomePage(){
 
 
 
+
                   setLipLocks(
 
                     data.lipLocksReceived || 0
 
                   );
+
 
 
 
@@ -188,14 +217,16 @@ function HomePage(){
                 }
 
 
+
               },
+
 
               (error)=>{
 
 
                 console.error(
 
-                  "Firestore listener error:",
+                  "User listener error:",
 
                   error
 
@@ -211,7 +242,113 @@ function HomePage(){
 
 
 
-          return unsubscribeUser;
+
+
+
+
+          const stardustRef =
+
+            doc(
+
+              db,
+
+              "stardust",
+
+              user.uid
+
+            );
+
+
+
+
+
+
+
+
+
+          const unsubscribeStardust =
+
+            onSnapshot(
+
+
+
+              stardustRef,
+
+
+
+              (snapshot)=>{
+
+
+                if(snapshot.exists()){
+
+
+                  const data =
+
+                    snapshot.data();
+
+
+
+                  setStardust(
+
+                    data.total || 0
+
+                  );
+
+
+
+                }
+
+                else{
+
+
+                  setStardust(0);
+
+
+                }
+
+
+
+              },
+
+
+
+              (error)=>{
+
+
+                console.error(
+
+                  "Stardust listener error:",
+
+                  error
+
+                );
+
+
+              }
+
+
+
+            );
+
+
+
+
+
+
+
+
+
+          return ()=>{
+
+
+            unsubscribeUser();
+
+
+            unsubscribeStardust();
+
+
+          };
+
 
 
         }
@@ -223,11 +360,17 @@ function HomePage(){
 
 
 
+
+
     return ()=>unsubscribeAuth();
 
 
 
   },[]);
+
+
+
+
 
 
 
@@ -249,7 +392,9 @@ function HomePage(){
       navigate("/");
 
 
+
     }
+
 
     catch(error){
 
@@ -266,7 +411,12 @@ function HomePage(){
     }
 
 
+
   }
+
+
+
+
 
 
 
@@ -279,7 +429,9 @@ function HomePage(){
   return (
 
 
+
     <div
+
 
       className="
         relative
@@ -289,16 +441,17 @@ function HomePage(){
         bg-black
       "
 
+
     >
 
 
 
 
 
-      {/* Astra Universe */}
 
 
       <div
+
 
         className="
           relative
@@ -307,7 +460,51 @@ function HomePage(){
           w-full
         "
 
+
       >
+<motion.div
+  initial={{ opacity: 0, y: -20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1 }}
+  className="
+    absolute
+    top-8
+    left-1/2
+    -translate-x-1/2
+    z-30
+    select-none
+  "
+>
+  <h1
+    className="
+      flex
+      items-center
+      gap-2
+      text-2xl
+      md:text-4xl
+      font-light
+      tracking-wide
+      text-white
+    "
+  >
+    <motion.span
+      animate={{
+        opacity: [0.75, 1, 0.75],
+        scale: [1, 1.15, 1],
+        rotate: [0, 12, -8, 0],
+      }}
+      transition={{
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      ✨
+    </motion.span>
+
+    Astra
+  </h1>
+</motion.div>
 
         <UniverseMap />
 
@@ -322,30 +519,15 @@ function HomePage(){
 
 
 
-      {/* Stardust */}
 
 
-      <div
-
-        className="
-          fixed
-          top-8
-          left-1/2
-          z-50
-          -translate-x-1/2
-        "
-
-      >
 
 
-        <StardustCounter
-
-          value={stardust}
-
-        />
+   
 
 
-      </div>
+
+
 
 
 
@@ -358,44 +540,37 @@ function HomePage(){
       {/* Navigation */}
 
 
-      <div
 
+
+
+   <div
+  className="
+    fixed
+    top-8
+    right-8
+    z-50
+    flex
+    items-center
+    gap-4
+    rounded-full
+    border
+    border-white/10
+    bg-black/40
+    px-4
+    py-2
+    backdrop-blur-xl
+  "
+>
+
+    <StardustCounter
+        value={stardust}
+    />
+
+    <NotificationBell />
+
+    <button
+        onClick={handleLogout}
         className="
-          fixed
-          top-8
-          right-8
-          z-50
-          flex
-          items-center
-          gap-4
-          rounded-full
-          border
-          border-white/10
-          bg-black/40
-          px-4
-          py-2
-          backdrop-blur-xl
-        "
-
-      >
-
-
-
-
-
-        <NotificationBell />
-
-
-
-
-
-
-
-        <button
-
-          onClick={handleLogout}
-
-          className="
             cursor-pointer
             rounded-full
             border
@@ -408,20 +583,16 @@ function HomePage(){
             text-white
             transition
             hover:bg-white/20
-          "
+        "
+    >
+        LOGOUT
+    </button>
 
-        >
-
-          LOGOUT
-
-
-        </button>
+</div>
 
 
 
 
-
-      </div>
 
 
 
@@ -434,20 +605,30 @@ function HomePage(){
       {/* Icarus Receiver Counter Only */}
 
 
+
+
+
       {
 
         starName==="icarus" && (
 
 
+
           <IcarusKissCounter
+
 
             value={kisses}
 
+
             sweetKisses={sweetKisses}
+
 
             lipLocks={lipLocks}
 
+
             latestNote={latestNote}
+
+
 
           />
 
@@ -456,6 +637,8 @@ function HomePage(){
 
 
       }
+
+
 
 
 

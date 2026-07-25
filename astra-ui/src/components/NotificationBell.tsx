@@ -40,18 +40,24 @@ function NotificationBell(){
 
 
 
+
   const [open,setOpen] =
+
     useState(false);
 
 
 
+
   const [notifications,setNotifications] =
+
     useState<any[]>([]);
 
 
 
+
   const [bellRef,setBellRef] =
-    useState<HTMLDivElement | null>(null);
+
+    useState<HTMLDivElement|null>(null);
 
 
 
@@ -85,6 +91,7 @@ function NotificationBell(){
 
 
 
+
           const userRef =
 
             doc(
@@ -101,9 +108,13 @@ function NotificationBell(){
 
 
 
+
+
           const userSnapshot =
 
             await getDoc(userRef);
+
+
 
 
 
@@ -117,9 +128,13 @@ function NotificationBell(){
 
 
 
+
+
           const data =
 
             userSnapshot.data();
+
+
 
 
 
@@ -137,6 +152,8 @@ function NotificationBell(){
 
 
 
+
+
           if(!currentStarName)
 
             return;
@@ -148,9 +165,11 @@ function NotificationBell(){
 
 
 
+
           const notificationQuery =
 
             query(
+
 
 
               collection(
@@ -200,7 +219,9 @@ function NotificationBell(){
             onSnapshot(
 
 
+
               notificationQuery,
+
 
 
               (snapshot)=>{
@@ -218,6 +239,8 @@ function NotificationBell(){
 
 
                   }));
+
+
 
 
 
@@ -244,6 +267,7 @@ function NotificationBell(){
               }
 
 
+
             );
 
 
@@ -253,6 +277,7 @@ function NotificationBell(){
 
 
       );
+
 
 
 
@@ -273,11 +298,13 @@ function NotificationBell(){
         unsubscribeNotifications();
 
 
+
     };
 
 
 
   },[]);
+
 
 
 
@@ -320,7 +347,9 @@ function NotificationBell(){
       }
 
 
+
     }
+
 
 
 
@@ -338,6 +367,8 @@ function NotificationBell(){
 
 
 
+
+
     return ()=>{
 
 
@@ -350,10 +381,14 @@ function NotificationBell(){
       );
 
 
+
     };
 
 
+
   },[bellRef]);
+
+
 
 
 
@@ -370,13 +405,13 @@ function NotificationBell(){
 
 
 
-    const unreadNotifications =
+    const unread =
 
       notifications.filter(
 
         notification =>
 
-          notification.read === false
+          notification.read===false
 
       );
 
@@ -384,10 +419,13 @@ function NotificationBell(){
 
 
 
-    for(const notification of unreadNotifications){
+
+    for(const notification of unread){
+
 
 
       await updateDoc(
+
 
 
         doc(
@@ -401,6 +439,7 @@ function NotificationBell(){
         ),
 
 
+
         {
 
           read:true
@@ -408,7 +447,9 @@ function NotificationBell(){
         }
 
 
+
       );
+
 
 
     }
@@ -438,6 +479,7 @@ function NotificationBell(){
     markNotificationsRead();
 
 
+
   }
 
 
@@ -455,13 +497,116 @@ function NotificationBell(){
 
     notifications.filter(
 
-
       notification =>
 
-        notification.read === false
-
+        notification.read===false
 
     ).length;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ function handleNotificationClick(
+  notification: any
+) {
+
+  if (
+    notification.type === "observatory" &&
+    notification.metadata?.storyId
+  ) {
+
+    navigate(
+      `/observatory/${notification.metadata.storyId}`
+    );
+
+    setOpen(false);
+    return;
+  }
+
+  if (
+    notification.type === "letter" &&
+    notification.metadata?.letterId
+  ) {
+
+    navigate(
+      `/letters/${notification.metadata.category}/${notification.metadata.letterId}`
+    );
+
+    setOpen(false);
+    return;
+  }
+
+  if (
+    notification.type === "bucket" &&
+    notification.metadata?.bucketId
+  ) {
+
+    navigate(
+      `/bucket-list/${notification.metadata.bucketId}`
+    );
+
+    setOpen(false);
+    return;
+  }
+
+  if (
+    notification.type === "quiz" &&
+    notification.metadata?.quizId
+  ) {
+
+    navigate(
+      `/quiz/${notification.metadata.quizId}`
+    );
+
+    setOpen(false);
+    return;
+  }
+
+  if (
+    notification.type === "garden"
+  ) {
+
+    navigate(
+      `/garden?entryId=${notification.metadata.gardenId}`
+    );
+
+    setOpen(false);
+    return;
+  }
+
+  if (
+    notification.type === "futureDream" &&
+    notification.metadata?.dreamId
+  ) {
+
+    navigate("/romance/future-dreams");
+
+    setOpen(false);
+    return;
+  }
+
+  if (
+    notification.type === "midnight"
+  ) {
+
+    navigate("/romance/late-night");
+
+    setOpen(false);
+    return;
+  }
+
+}
+
 
 
 
@@ -483,12 +628,11 @@ function NotificationBell(){
       ref={setBellRef}
 
 
-      className="
-        relative
-      "
+      className="relative"
 
 
     >
+
 
 
 
@@ -502,22 +646,14 @@ function NotificationBell(){
         onClick={()=>{
 
 
-          if(open){
-
+          if(open)
 
             setOpen(false);
 
 
-          }
-
-          else{
-
+          else
 
             openNotifications();
-
-
-          }
-
 
 
         }}
@@ -536,8 +672,8 @@ function NotificationBell(){
       >
 
 
-        🔔
 
+        🔔
 
 
 
@@ -546,7 +682,7 @@ function NotificationBell(){
 
         {
 
-          unreadCount > 0 && (
+          unreadCount>0 && (
 
 
             <span
@@ -578,6 +714,8 @@ function NotificationBell(){
 
 
 
+
+
       </button>
 
 
@@ -599,6 +737,7 @@ function NotificationBell(){
 
 
           <motion.div
+
 
 
             initial={{
@@ -653,22 +792,17 @@ function NotificationBell(){
 
 
 
-            <h2
 
-
-              className="
-                mb-5
-                text-sm
-                tracking-widest
-              "
-
-
-            >
+            <h2 className="
+              mb-5
+              text-sm
+              tracking-widest
+            ">
 
               NOTIFICATIONS
 
-
             </h2>
+
 
 
 
@@ -685,17 +819,12 @@ function NotificationBell(){
 
 
 
-              <p
-
-                className="
-                  text-sm
-                  text-white/50
-                "
-
-              >
+              <p className="
+                text-sm
+                text-white/50
+              ">
 
                 No notifications
-
 
               </p>
 
@@ -705,13 +834,8 @@ function NotificationBell(){
 
 
 
-              <div
+              <div className="space-y-4">
 
-                className="
-                  space-y-4
-                "
-
-              >
 
 
 
@@ -721,89 +845,16 @@ function NotificationBell(){
                 notifications.map(notification=>(
 
 
+
                   <div
+
 
 
                     key={notification.id}
 
 
 
-                    onClick={()=>{
-
-
-                      if(
-
-                        notification.type === "observatory"
-
-                        &&
-
-                        notification.metadata?.storyId
-
-                      ){
-
-
-                        navigate(
-
-                          `/observatory/${notification.metadata.storyId}`
-
-                        );
-
-
-                        setOpen(false);
-
-
-                        return;
-
-
-                      }
-
-
-
-
-
-
-
-                      if(
-
-                        notification.type === "letter"
-
-                        &&
-
-                        notification.metadata?.letterId
-
-                      ){
-
-
-
-                        navigate(
-
-                          `/letters/${
-
-                            notification.metadata.category
-
-                          }/${
-
-                            notification.metadata.letterId
-
-                          }`
-
-                        );
-
-
-
-                        setOpen(false);
-
-
-
-                        return;
-
-
-                      }
-
-
-
-
-                    }}
+                    onClick={()=>handleNotificationClick(notification)}
 
 
 
@@ -838,17 +889,12 @@ function NotificationBell(){
 
 
 
-                    <p
+                    <p className="
+                      mt-2
+                      text-xs
+                      text-white/60
+                    ">
 
-
-                      className="
-                        mt-2
-                        text-xs
-                        text-white/60
-                      "
-
-
-                    >
 
                       {notification.message}
 
@@ -859,7 +905,9 @@ function NotificationBell(){
 
 
 
+
                   </div>
+
 
 
                 ))
@@ -867,6 +915,7 @@ function NotificationBell(){
 
 
               }
+
 
 
 
@@ -881,11 +930,11 @@ function NotificationBell(){
 
 
 
+
           </motion.div>
 
 
         )
-
 
       }
 
@@ -898,14 +947,13 @@ function NotificationBell(){
 
 
 
-
-
     </div>
 
 
   );
 
 }
+
 
 
 

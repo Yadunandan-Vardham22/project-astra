@@ -1,263 +1,71 @@
 import { motion } from "framer-motion";
-
+import "./CosmicOrb.css";
 
 interface CosmicOrbProps {
-
-  icon:string;
-
-  name:string;
-
-  color:string;
-
-  onClick:()=>void;
-
+  icon: string;
+  name: string;
+  color: string;
+  onClick: () => void;
 }
-
-
 
 function CosmicOrb({
-
   icon,
-
   name,
-
   color,
-
-  onClick
-
-}:CosmicOrbProps){
-
-
+  onClick,
+}: CosmicOrbProps) {
   return (
-
     <motion.button
-
-
       onClick={onClick}
-
-
       whileHover={{
-
-        scale:1.15
-
+        scale: 1.12,
       }}
-
-
-
-      className="
-        cursor-pointer
-        flex
-        flex-col
-        items-center
-      "
-
-
-
+      whileTap={{
+        scale: 0.96,
+      }}
+      className="orb-button"
     >
-
-
-
-
-
       <motion.div
-
-
+        className="cosmic-orb"
+        style={
+          {
+            "--orb-color": color,
+          } as React.CSSProperties
+        }
         animate={{
-
-          y:[0,-8,0],
-
-          rotate:[0,3,-3,0]
-
+          y: [0, -8, 0],
+          rotate: [0, 2, -2, 0],
         }}
-
-
-
         transition={{
-
-          duration:6,
-
-          repeat:Infinity,
-
-          ease:"easeInOut"
-
+          duration: 7,
+          repeat: Infinity,
+          ease: "easeInOut",
         }}
-
-
-
-        className="
-          relative
-          flex
-          h-14
-          w-14
-          items-center
-          justify-center
-          overflow-hidden
-          rounded-full
-        "
-
-
-
-        style={{
-
-
-          background:
-
-          `
-          radial-gradient(
-            circle at 30% 25%,
-            rgba(255,255,255,0.9),
-            ${color},
-            rgba(0,0,0,0.9)
-          ),
-
-          radial-gradient(
-            circle at 70% 80%,
-            rgba(0,0,0,0.7),
-            transparent
-          )
-          `,
-
-
-
-          boxShadow:
-
-          `
-          inset -8px -10px 15px rgba(0,0,0,0.5),
-          0 0 20px ${color},
-          0 0 45px ${color}
-          `
-
-
-        }}
-
-
-
       >
+        <div className="orb-glow" />
 
+        <div className="orb-shell" />
 
+        <div className="orb-gradient one" />
 
+        <div className="orb-gradient two" />
 
+        <div className="orb-gradient three" />
 
+        <div className="orb-highlight" />
 
+        <div className="orb-ring" />
 
-        {/* Planet surface texture */}
-
-        <motion.div
-
-
-          animate={{
-
-            x:[-10,10,-10]
-
-          }}
-
-
-
-          transition={{
-
-            duration:12,
-
-            repeat:Infinity
-
-          }}
-
-
-
-          className="
-            absolute
-            inset-0
-            rounded-full
-            opacity-30
-            bg-white/20
-            blur-md
-          "
-
-
-        />
-
-
-
-
-
-
-
-
-        {/* Atmosphere */}
-
-
-        <div
-
-          className="
-            absolute
-            inset-0
-            rounded-full
-            border
-            border-white/20
-          "
-
-        />
-
-
-
-
-
-
-
-
-        {/* Icon */}
-
-
-        <span
-
-          className="
-            relative
-            z-10
-            text-xl
-          "
-
-        >
-
+        <span className="orb-icon">
           {icon}
-
         </span>
-
-
-
-
       </motion.div>
 
-
-
-
-
-
-
-      <span
-
-        className="
-          mt-3
-          text-[10px]
-          tracking-[0.25em]
-          text-purple-100
-        "
-
-      >
-
+      <span className="orb-name">
         {name}
-
-
       </span>
-
-
-
-
-
     </motion.button>
-
   );
-
 }
-
-
 
 export default CosmicOrb;

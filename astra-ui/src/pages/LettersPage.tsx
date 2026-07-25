@@ -3,7 +3,6 @@ import { useState } from "react";
 import HomeButton from "../components/HomeButton";
 import AddLetterModal from "../components/AddLetterModal";
 
-
 const letters = [
 
   {
@@ -14,7 +13,6 @@ const letters = [
     "Words written for the moments when the heart needs a reminder."
   },
 
-
   {
     id:"angry",
     icon:"🔥",
@@ -22,7 +20,6 @@ const letters = [
     description:
     "Words written in moments of frustration, honesty and emotions left unspoken."
   },
-
 
   {
     id:"apologies",
@@ -32,27 +29,29 @@ const letters = [
     "Letters about understanding, growth and the things left unsaid."
   },
 
-
   {
     id:"dream-journal",
     icon:"🌙",
     title:"Dream Journal",
     description:
     "A place to preserve the strange, beautiful worlds visited while sleeping."
+  },
+
+  {
+    id:"confessions",
+    icon:"🤍",
+    title:"Confession Box",
+    description:
+    "A place where hearts speak without fear. Honest thoughts, hidden feelings and quiet truths."
   }
 
 ];
 
-
-
-
-
 function LettersPage(){
-
 
   const navigate = useNavigate();
 
- const [showAddLetter,setShowAddLetter] =
+  const [showAddLetter,setShowAddLetter] =
     useState(false);
 
   return (
@@ -71,17 +70,6 @@ function LettersPage(){
 
     >
 
-
-
-
-     
-
-
-
-
-
-
-
       <div
 
         className="
@@ -91,13 +79,7 @@ function LettersPage(){
 
       >
 
-
-
-
-
-
         {/* Header */}
-
 
         <div
 
@@ -107,18 +89,11 @@ function LettersPage(){
 
         >
 
-
-
           <div className="text-6xl">
 
             💌
 
           </div>
-
-
-
-
-
 
           <h1
 
@@ -135,12 +110,6 @@ function LettersPage(){
 
           </h1>
 
-
-
-
-
-
-
           <p
 
             className="
@@ -155,13 +124,6 @@ function LettersPage(){
             WORDS THAT SURVIVED TIME
 
           </p>
-
-
-
-
-
-
-
 
           <p
 
@@ -181,22 +143,9 @@ function LettersPage(){
 
           </p>
 
-
-
-
         </div>
 
-
-
-
-
-
-
-
-
         {/* Letter Categories */}
-
-
 
         <div
 
@@ -209,29 +158,19 @@ function LettersPage(){
 
         >
 
-
-
-
           {
+
             letters.map((letter)=>(
-
-
 
               <button
 
-
                 key={letter.id}
-
-
 
                 onClick={()=>navigate(
 
                   `/letters/${letter.id}`
 
                 )}
-
-
-
 
                 className="
                   group
@@ -248,14 +187,7 @@ function LettersPage(){
                   hover:bg-white/[0.08]
                 "
 
-
-
               >
-
-
-
-
-
 
                 <div
 
@@ -267,15 +199,7 @@ function LettersPage(){
 
                   {letter.icon}
 
-
                 </div>
-
-
-
-
-
-
-
 
                 <h2
 
@@ -290,15 +214,7 @@ function LettersPage(){
 
                   {letter.title}
 
-
                 </h2>
-
-
-
-
-
-
-
 
                 <p
 
@@ -313,15 +229,7 @@ function LettersPage(){
 
                   {letter.description}
 
-
                 </p>
-
-
-
-
-
-
-
 
                 <p
 
@@ -338,34 +246,15 @@ function LettersPage(){
 
                 </p>
 
-
-
-
-
-
               </button>
 
-
             ))
+
           }
-
-
-
-
 
         </div>
 
-
-
-
-
-
-
-
-
         {/* Bottom Quote */}
-
-
 
         <div
 
@@ -381,9 +270,6 @@ function LettersPage(){
 
         >
 
-
-
-
           <p
 
             className="
@@ -397,11 +283,6 @@ function LettersPage(){
             LETTERS FROM THE UNIVERSE
 
           </p>
-
-
-
-
-
 
           <p
 
@@ -419,73 +300,58 @@ function LettersPage(){
 
           </p>
 
-
-
-
-
         </div>
-
-
-
-
-
-
 
       </div>
 
-<button
+      <button
 
+        onClick={()=>setShowAddLetter(true)}
 
-  onClick={()=>setShowAddLetter(true)}
+        className="
+          fixed
+          bottom-32
+          right-10
+          cursor-pointer
+          rounded-full
+          border
+          border-pink-300/40
+          bg-pink-500/20
+          px-6
+          py-4
+          text-xs
+          tracking-widest
+          backdrop-blur-xl
+        "
 
+      >
 
+        + WRITE LETTER 💌
 
-  className="
-    fixed
-    bottom-32
-    right-10
-    cursor-pointer
-    rounded-full
-    border
-    border-pink-300/40
-    bg-pink-500/20
-    px-6
-    py-4
-    text-xs
-    tracking-widest
-    backdrop-blur-xl
-  "
+      </button>
 
+      {
 
->
+        showAddLetter && (
 
-  + WRITE LETTER 💌
+          <AddLetterModal
 
-</button>
+            onClose={()=>
+              setShowAddLetter(false)
+            }
 
-{
-  showAddLetter && (
+            onAdded={()=>{}}
 
-    <AddLetterModal
+          />
 
-      onClose={()=>
-        setShowAddLetter(false)
+        )
+
       }
-
-
-      onAdded={()=>{}}
-
-    />
-
-  )
-}
 
     </div>
 
   );
 
 }
-
-
 
 export default LettersPage;

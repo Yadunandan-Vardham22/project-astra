@@ -1,0 +1,312 @@
+.orb-button{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    cursor:pointer;
+    background:none;
+    border:none;
+}
+
+.cosmic-orb{
+
+    position:relative;
+
+    width:88px;
+    height:88px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    isolation:isolate;
+
+    background:
+    radial-gradient(circle at 30% 25%,
+    rgba(255,255,255,.95),
+    rgba(255,255,255,.35) 18%,
+    transparent 22%),
+
+    radial-gradient(circle at center,
+    color-mix(in srgb,var(--orb-color) 85%,black),
+    black 95%);
+
+    box-shadow:
+    0 0 18px color-mix(in srgb,var(--orb-color) 80%,transparent),
+    0 0 45px color-mix(in srgb,var(--orb-color) 60%,transparent),
+    inset -12px -14px 20px rgba(0,0,0,.45),
+    inset 10px 10px 16px rgba(255,255,255,.08);
+
+    transition:.4s;
+}
+
+.orb-button:hover .cosmic-orb{
+
+    box-shadow:
+
+    0 0 30px color-mix(in srgb,var(--orb-color) 90%,transparent),
+
+    0 0 70px color-mix(in srgb,var(--orb-color) 70%,transparent),
+
+    inset -12px -14px 20px rgba(0,0,0,.45),
+
+    inset 10px 10px 20px rgba(255,255,255,.1);
+
+}
+
+.orb-shell{
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:50%;
+
+    backdrop-filter:blur(8px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    z-index:8;
+
+}
+
+.orb-gradient{
+
+    position:absolute;
+
+    width:140%;
+
+    height:140%;
+
+    border-radius:50%;
+
+    filter:blur(18px);
+
+    mix-blend-mode:screen;
+
+}
+
+.one{
+
+    background:linear-gradient(
+    45deg,
+    var(--orb-color),
+    white,
+    transparent);
+
+    animation:flowOne 9s linear infinite;
+}
+
+.two{
+
+    background:radial-gradient(
+    circle,
+    white,
+    transparent 70%);
+
+    animation:flowTwo 12s linear infinite;
+}
+
+.three{
+
+    background:radial-gradient(
+    circle,
+    color-mix(in srgb,var(--orb-color) 70%,cyan),
+    transparent 65%);
+
+    animation:flowThree 15s linear infinite;
+}
+
+.orb-highlight{
+
+    position:absolute;
+
+    top:10px;
+
+    left:16px;
+
+    width:32px;
+
+    height:16px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.6);
+
+    filter:blur(5px);
+
+    opacity:.8;
+
+    z-index:12;
+}
+
+.orb-ring{
+
+    position:absolute;
+
+    inset:-4px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    animation:ringRotate 14s linear infinite;
+}
+
+.orb-glow{
+
+    position:absolute;
+
+    inset:-12px;
+
+    border-radius:50%;
+
+    background:radial-gradient(
+    circle,
+    color-mix(in srgb,var(--orb-color) 45%,transparent),
+    transparent 70%);
+
+    filter:blur(18px);
+
+    animation:pulseGlow 4s ease-in-out infinite;
+}
+
+.orb-icon{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:15;
+
+    font-size:30px;
+
+    text-shadow:0 0 15px white;
+}
+
+.orb-name{
+
+    margin-top:14px;
+
+    color:#ede9fe;
+
+    font-size:11px;
+
+    letter-spacing:.25em;
+
+    transition:.35s;
+}
+
+.orb-button:hover .orb-name{
+
+    color:white;
+
+    letter-spacing:.32em;
+}
+
+@keyframes flowOne{
+
+0%{
+
+transform:translate(-15%,-10%) rotate(0deg);
+
+}
+
+50%{
+
+transform:translate(5%,10%) rotate(180deg);
+
+}
+
+100%{
+
+transform:translate(-15%,-10%) rotate(360deg);
+
+}
+
+}
+
+@keyframes flowTwo{
+
+0%{
+
+transform:translate(20%,10%) scale(1);
+
+}
+
+50%{
+
+transform:translate(-15%,-10%) scale(1.25);
+
+}
+
+100%{
+
+transform:translate(20%,10%) scale(1);
+
+}
+
+}
+
+@keyframes flowThree{
+
+0%{
+
+transform:translate(-10%,15%) scale(1.2);
+
+}
+
+50%{
+
+transform:translate(15%,-15%) scale(.9);
+
+}
+
+100%{
+
+transform:translate(-10%,15%) scale(1.2);
+
+}
+
+}
+
+@keyframes pulseGlow{
+
+0%,100%{
+
+transform:scale(1);
+
+opacity:.7;
+
+}
+
+50%{
+
+transform:scale(1.12);
+
+opacity:1;
+
+}
+
+}
+
+@keyframes ringRotate{
+
+from{
+
+transform:rotate(0deg);
+
+}
+
+to{
+
+transform:rotate(360deg);
+
+}
+
+}

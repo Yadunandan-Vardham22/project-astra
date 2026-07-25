@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import CosmicOrb from "./CosmicOrb";
+import { useEffect, useState } from "react";
 
 
 
@@ -82,7 +83,20 @@ function UniverseMap(){
   const navigate = useNavigate();
 
 
+const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
+useEffect(() => {
+  const handleMove = (e: MouseEvent) => {
+    setMouse({
+      x: e.clientX,
+      y: e.clientY,
+    });
+  };
+
+  window.addEventListener("mousemove", handleMove);
+
+  return () => window.removeEventListener("mousemove", handleMove);
+}, []);
 
   return (
 
@@ -159,7 +173,33 @@ function UniverseMap(){
       }
 
 
-
+<motion.div
+  className="pointer-events-none absolute inset-0 z-0"
+>
+  <motion.div
+    animate={{
+      x: mouse.x - 175,
+      y: mouse.y - 175,
+    }}
+    transition={{
+      type: "spring",
+      stiffness: 90,
+      damping: 30,
+      mass: 0.4,
+    }}
+    className="
+      absolute
+      h-[350px]
+      w-[350px]
+      rounded-full
+      blur-3xl
+    "
+    style={{
+      background:
+        "radial-gradient(circle, rgba(255,255,255,0.045) 0%, rgba(147,197,253,0.03) 35%, transparent 75%)",
+    }}
+  />
+</motion.div>
 
 
 

@@ -186,7 +186,9 @@ location.pathname !== "/home" &&
 
 !location.pathname.startsWith("/observatory/") &&
 
-!location.pathname.startsWith("/letters/") && (
+!location.pathname.startsWith("/letters/") && !location.pathname.startsWith("/bucket-list/") &&
+!location.pathname.startsWith("/quiz/") && 
+!location.pathname.startsWith("/memories/") &&(
 
 
           <div
@@ -200,7 +202,18 @@ location.pathname !== "/home" &&
 
           >
 
-            <HomeButton />
+            <HomeButton
+  label={
+    location.pathname.startsWith("/romance/")
+      ? "Romance"
+      : "Home"
+  }
+  to={
+    location.pathname.startsWith("/romance/")
+      ? "/romance"
+      : "/home"
+  }
+/>
 
 
           </div>

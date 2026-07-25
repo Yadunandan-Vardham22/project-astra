@@ -1,27 +1,19 @@
 import { useNavigate } from "react-router-dom";
 
+interface HomeButtonProps {
+  label?: string;
+  to?: string;
+}
 
-
-function HomeButton(){
-
-
-
+function HomeButton({
+  label = "HOME",
+  to = "/home",
+}: HomeButtonProps) {
   const navigate = useNavigate();
 
-
-
-
-
   return (
-
-
     <button
-
-
-      onClick={()=>navigate("/home")}
-
-
-
+      onClick={() => navigate(to)}
       className="
         cursor-pointer
         rounded-full
@@ -37,21 +29,10 @@ function HomeButton(){
         transition
         hover:bg-white/10
       "
-
-
     >
-
-      HOME
-
-
+      {label.toUpperCase()}
     </button>
-
-
   );
-
-
 }
-
-
 
 export default HomeButton;

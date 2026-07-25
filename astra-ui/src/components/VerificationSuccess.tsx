@@ -261,7 +261,7 @@ function VerificationSuccess({ onComplete }: Props) {
 
         >
 
-          Welcome back, My Star 🌙
+          Welcome back, Bangaram🌙
 
         </motion.p>
 

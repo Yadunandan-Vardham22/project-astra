@@ -45,6 +45,10 @@ const collectionInfo:any = {
 
   "dream-journal":{
     icon:"🌙"
+  },
+
+    confessions:{
+    icon:"🤍"
   }
 
 };
