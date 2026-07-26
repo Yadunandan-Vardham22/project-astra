@@ -1,0 +1,140 @@
+Date : 2026-07-26 01:17:34
+Directory : c:\Users\Public\Nandu\project-astra
+Total : 93 files,  21693 codes, 98 comments, 17104 blanks, all 38895 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| TypeScript JSX     |         71 |     14,653 |         66 |     16,771 |     31,490 |
+| JSON               |          6 |      6,279 |          4 |         10 |      6,293 |
+| TypeScript         |          7 |        352 |         28 |        139 |        519 |
+| PostCSS            |          3 |        343 |          0 |        164 |        507 |
+| HTML               |          1 |         22 |          0 |          1 |         23 |
+| JavaScript         |          1 |         21 |          0 |          2 |         23 |
+| Markdown           |          1 |         14 |          0 |         15 |         29 |
+| JSON with Comments |          1 |          7 |          0 |          1 |          8 |
+| XML                |          2 |          2 |          0 |          1 |          3 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                   | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                      |         93 |     21,693 |         98 |     17,104 |     38,895 |
+| . (Files)                                                                              |          2 |      1,256 |          0 |          2 |      1,258 |
+| astra-ui                                                                               |         91 |     20,437 |         98 |     17,102 |     37,637 |
+| astra-ui (Files)                                                                       |          9 |      5,098 |          5 |         29 |      5,132 |
+| astra-ui\src                                                                           |         82 |     15,339 |         93 |     17,073 |     32,505 |
+| astra-ui\src (Files)                                                                   |          4 |        309 |          9 |         84 |        402 |
+| astra-ui\src\assets                                                                    |          2 |          2 |          0 |          1 |          3 |
+| astra-ui\src\components                                                                |         45 |      6,878 |         65 |      6,699 |     13,642 |
+| astra-ui\src\components (Files)                                                        |         41 |      6,504 |         39 |      6,586 |     13,129 |
+| astra-ui\src\components\meteor                                                         |          4 |        374 |         26 |        113 |        513 |
+| astra-ui\src\config                                                                    |          1 |          4 |          0 |          1 |          5 |
+| astra-ui\src\context                                                                   |          1 |         39 |          0 |          9 |         48 |
+| astra-ui\src\firebase                                                                  |          1 |         14 |          2 |          8 |         24 |
+| astra-ui\src\layouts                                                                   |          1 |        101 |          0 |        174 |        275 |
+| astra-ui\src\pages                                                                     |         26 |      7,959 |         17 |     10,055 |     18,031 |
+| astra-ui\src\services                                                                  |          1 |         33 |          0 |         42 |         75 |
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                               | language           | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| c:\Users\Public\Nandu\project-astra\astra-ui\README.md                                 | Markdown           |         14 |          0 |         15 |         29 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\eslint.config.js                          | JavaScript         |         21 |          0 |          2 |         23 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\index.html                                | HTML               |         22 |          0 |          1 |         23 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\package-lock.json                         | JSON               |      4,943 |          0 |          1 |      4,944 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\package.json                              | JSON               |         39 |          0 |          1 |         40 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\App.css                               | PostCSS            |        158 |          0 |         27 |        185 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\App.tsx                               | TypeScript JSX     |        134 |          9 |         53 |        196 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\assets\react.svg                      | XML                |          1 |          0 |          0 |          1 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\assets\vite.svg                       | XML                |          1 |          0 |          1 |          2 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\AddBucketModal.tsx         | TypeScript JSX     |        286 |          0 |        548 |        834 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\AddFutureDreamModal.tsx    | TypeScript JSX     |        126 |          0 |         37 |        163 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\AddHeartPromptModal.tsx    | TypeScript JSX     |        201 |          0 |        136 |        337 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\AddLetterModal.tsx         | TypeScript JSX     |        368 |          1 |        464 |        833 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\AddLoveChallengeModal.tsx  | TypeScript JSX     |        201 |          0 |        151 |        352 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\AddStoryModal.tsx          | TypeScript JSX     |        346 |          0 |        495 |        841 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\AnswerHeartPromptModal.tsx | TypeScript JSX     |        131 |          0 |        104 |        235 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\BackButton.tsx             | TypeScript JSX     |         36 |          0 |         28 |         64 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\CelestialBackground.tsx    | TypeScript JSX     |        131 |          7 |        195 |        333 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\CelestialStars.tsx         | TypeScript JSX     |        136 |          0 |        127 |        263 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\CosmicCursor.tsx           | TypeScript JSX     |        158 |          1 |        251 |        410 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\CosmicDust.tsx             | TypeScript JSX     |         73 |          0 |         93 |        166 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\CosmicGlow.tsx             | TypeScript JSX     |         50 |          2 |          4 |         56 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\CosmicMist.tsx             | TypeScript JSX     |        122 |          5 |        109 |        236 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\CosmicOrb.css              | PostCSS            |        177 |          0 |        135 |        312 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\CosmicOrb.tsx              | TypeScript JSX     |         60 |          0 |         11 |         71 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\CosmicTrails.tsx           | TypeScript JSX     |        109 |          2 |          8 |        119 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\CursorParticles.tsx        | TypeScript JSX     |         98 |          0 |         26 |        124 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\EditBucketModal.tsx        | TypeScript JSX     |        204 |          0 |        341 |        545 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\EditLetterModal.tsx        | TypeScript JSX     |        235 |          0 |        317 |        552 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\EditStoryModal.tsx         | TypeScript JSX     |        224 |          0 |        291 |        515 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\GlobalKissCounter.tsx      | TypeScript JSX     |        507 |          0 |        528 |      1,035 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\HomeButton.tsx             | TypeScript JSX     |         34 |          0 |          4 |         38 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\IcarusKissCounter.tsx      | TypeScript JSX     |        161 |          0 |        220 |        381 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\IntroSequence.tsx          | TypeScript JSX     |         38 |          0 |          7 |         45 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\KissCounter.tsx            | TypeScript JSX     |        449 |          0 |        473 |        922 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\LetterModal.tsx            | TypeScript JSX     |        220 |          1 |        274 |        495 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\LightBloom.tsx             | TypeScript JSX     |         76 |          3 |          4 |         83 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\MessageBubble.tsx          | TypeScript JSX     |         52 |          0 |          3 |         55 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\MessageInput.tsx           | TypeScript JSX     |         51 |          0 |         11 |         62 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\Meteor.tsx                 | TypeScript JSX     |         77 |          6 |          8 |         91 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\Nebula.tsx                 | TypeScript JSX     |          6 |          0 |          1 |          7 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\NotificationBell.tsx       | TypeScript JSX     |        343 |          0 |        618 |        961 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\PremiumUnlockModal.tsx     | TypeScript JSX     |        167 |          1 |        196 |        364 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\ShootingStar.tsx           | TypeScript JSX     |         28 |          0 |          2 |         30 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\Star.tsx                   | TypeScript JSX     |        173 |          6 |         28 |        207 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\StarField.tsx              | TypeScript JSX     |         62 |          0 |          7 |         69 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\StardustCounter.tsx        | TypeScript JSX     |         35 |          0 |         36 |         71 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\Title.tsx                  | TypeScript JSX     |        216 |          0 |         51 |        267 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\UniverseMap.tsx            | TypeScript JSX     |        168 |          2 |        134 |        304 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\VerificationSuccess.tsx    | TypeScript JSX     |        169 |          2 |        110 |        281 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\meteor\MeteorCanvas.tsx    | TypeScript JSX     |         84 |          1 |         27 |        112 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\meteor\Physics.ts          | TypeScript         |         62 |          0 |         18 |         80 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\meteor\Renderer.ts         | TypeScript         |        200 |         25 |         56 |        281 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\components\meteor\types.ts            | TypeScript         |         28 |          0 |         12 |         40 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\config\starUsers.ts                   | TypeScript         |          4 |          0 |          1 |          5 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\context\CosmicContext.tsx             | TypeScript JSX     |         39 |          0 |          9 |         48 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\firebase\firebaseConfig.ts            | TypeScript         |         14 |          2 |          8 |         24 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\index.css                             | PostCSS            |          8 |          0 |          2 |         10 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\layouts\UniverseLayout.tsx            | TypeScript JSX     |        101 |          0 |        174 |        275 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\main.tsx                              | TypeScript JSX     |          9 |          0 |          2 |         11 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\BucketCollectionPage.tsx        | TypeScript JSX     |        342 |          0 |        539 |        881 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\BucketDetailPage.tsx            | TypeScript JSX     |        326 |          0 |        572 |        898 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\BucketListPage.tsx              | TypeScript JSX     |         10 |          0 |         13 |         23 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\ChapterPage.tsx                 | TypeScript JSX     |        462 |          0 |        650 |      1,112 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\CreateQuizPage.tsx              | TypeScript JSX     |      1,055 |          3 |      1,659 |      2,717 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\FutureDreamsPage.tsx            | TypeScript JSX     |        125 |          0 |         57 |        182 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\GardenPage.tsx                  | TypeScript JSX     |        459 |          0 |        619 |      1,078 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\HeartJournalPage.tsx            | TypeScript JSX     |        146 |          0 |         20 |        166 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\HeartPromptPage.tsx             | TypeScript JSX     |        232 |          0 |        172 |        404 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\HomePage.tsx                    | TypeScript JSX     |        248 |          2 |        408 |        658 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\LandingPage.tsx                 | TypeScript JSX     |         35 |          0 |         11 |         46 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\LetterCollectionPage.tsx        | TypeScript JSX     |        360 |          0 |        543 |        903 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\LetterPage.tsx                  | TypeScript JSX     |        286 |          0 |        462 |        748 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\LettersPage.tsx                 | TypeScript JSX     |        242 |          3 |        111 |        356 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\LoginPage.tsx                   | TypeScript JSX     |        319 |          0 |        119 |        438 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\LoveChallengesPage.tsx          | TypeScript JSX     |        319 |          0 |        206 |        525 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\MemoriesPage.tsx                | TypeScript JSX     |        267 |          0 |        387 |        654 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\MidnightPage.tsx                | TypeScript JSX     |        118 |          0 |         55 |        173 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\ObservatoryPage.tsx             | TypeScript JSX     |        415 |          0 |        530 |        945 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\QuizAttemptPage.tsx             | TypeScript JSX     |        634 |          6 |      1,047 |      1,687 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\QuizCategoryPage.tsx            | TypeScript JSX     |        314 |          0 |        374 |        688 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\QuizCollectionPage.tsx          | TypeScript JSX     |        358 |          0 |        529 |        887 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\QuizPage.tsx                    | TypeScript JSX     |        175 |          2 |        223 |        400 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\QuizResultPage.tsx              | TypeScript JSX     |        134 |          0 |        200 |        334 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\RomancePage.tsx                 | TypeScript JSX     |        191 |          0 |         51 |        242 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\pages\VerifyPage.tsx                  | TypeScript JSX     |        387 |          1 |        498 |        886 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\src\services\notificationService.ts       | TypeScript         |         33 |          0 |         42 |         75 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\tsconfig.app.json                         | JSON               |         22 |          2 |          3 |         27 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\tsconfig.json                             | JSON with Comments |          7 |          0 |          1 |          8 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\tsconfig.node.json                        | JSON               |         19 |          2 |          3 |         24 |
+| c:\Users\Public\Nandu\project-astra\astra-ui\vite.config.ts                            | TypeScript         |         11 |          1 |          2 |         14 |
+| c:\Users\Public\Nandu\project-astra\package-lock.json                                  | JSON               |      1,250 |          0 |          1 |      1,251 |
+| c:\Users\Public\Nandu\project-astra\package.json                                       | JSON               |          6 |          0 |          1 |          7 |
+| Total                                                                                  |                    |     21,693 |         98 |     17,104 |     38,895 |
++----------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

@@ -8,6 +8,7 @@ import {
   getDocs,
   doc,
   updateDoc,
+  setDoc,
   increment
 } from "firebase/firestore";    
 
@@ -336,6 +337,25 @@ function GlobalKissCounter({
                         )
 
 
+                }
+
+            );
+
+            await setDoc(
+
+                doc(
+                    db,
+                    "stardust",
+                    erayaDoc.id
+                ),
+
+                {
+                    total:
+                        increment(reward)
+                },
+
+                {
+                    merge: true
                 }
 
             );
