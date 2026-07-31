@@ -77,14 +77,12 @@ function Title() {
               text-white
             "
             style={{
-              fontFamily:
-                '"Playfair Display", serif',
+              fontFamily: '"Playfair Display", serif',
               fontWeight: 300,
             }}
           >
             Not every wish falls from the sky.
           </h1>
-
 
           <div
             className="
@@ -96,13 +94,13 @@ function Title() {
             "
           >
 
-            <div className="h-px w-16 bg-white/10" />
+            <div className="h-px w-8 md:w-16 bg-white/10" />
 
-            <div className="text-[10px] text-amber-200/70">
+            <div className="text-xs md:text-[10px] text-amber-200/70">
               ✦
             </div>
 
-            <div className="h-px w-16 bg-white/10" />
+            <div className="h-px w-8 md:w-16 bg-white/10" />
 
           </div>
 
@@ -122,16 +120,14 @@ function Title() {
           >
             Some simply walk into your{" "}
 
-            <span
+              <span
               className="
                 inline-flex
                 justify-center
                 align-baseline
                 ml-1
+                w-10 md:w-[55px]
               "
-              style={{
-                width: "55px",
-              }}
             >
 
               <AnimatePresence mode="wait">
@@ -209,9 +205,11 @@ function Title() {
             border
             border-white/20
             bg-white/5
-            px-10
-            py-4
-            text-[11px]
+            px-6
+            md:px-10
+            py-3
+            md:py-4
+            text-sm md:text-[11px]
             uppercase
             tracking-[0.35em]
             text-white

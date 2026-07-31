@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 
@@ -43,19 +43,24 @@ function IcarusKissCounter({
 
 
 
+  const [containerRef, setContainerRef] = useState<HTMLDivElement|null>(null);
+  const [anchorRight, setAnchorRight] = useState(false);
+
+  useEffect(()=>{
+    if(!containerRef) return;
+    const calc = ()=>{
+      const rect = containerRef.getBoundingClientRect();
+      setAnchorRight(rect.left > window.innerWidth/2);
+    };
+    calc();
+    window.addEventListener('resize', calc);
+    return ()=> window.removeEventListener('resize', calc);
+  },[containerRef]);
+
   return (
 
 
-    <div
-
-      className="
-        fixed
-        bottom-8
-        right-8
-        z-[100]
-      "
-
-    >
+    <div ref={setContainerRef} className="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-[100]">
 
 
 
@@ -151,20 +156,10 @@ function IcarusKissCounter({
 
 
 
-            className="
-              absolute
-              bottom-24
-              right-0
-              z-50
-              w-72
-              rounded-3xl
-              border
-              border-pink-300/30
-              bg-black/80
-              p-6
-              text-white
-              backdrop-blur-xl
-            "
+            className={
+              `absolute bottom-24 z-50 rounded-3xl border border-pink-300/30 bg-black/80 p-6 text-white backdrop-blur-xl
+            ${anchorRight ? 'md:right-0 md:left-auto md:w-72' : 'md:left-0 md:right-auto md:w-72'} w-[calc(100%-2rem)] left-4 right-4 max-w-[18rem]`
+            }
 
           >
 
@@ -325,21 +320,7 @@ function IcarusKissCounter({
 
 
 
-        className="
-          flex
-          h-16
-          w-16
-          cursor-pointer
-          flex-col
-          items-center
-          justify-center
-          rounded-full
-          border
-          border-pink-300/40
-          bg-black/40
-          text-white
-          backdrop-blur-xl
-        "
+        className="flex h-12 w-12 md:h-16 md:w-16 cursor-pointer flex-col items-center justify-center rounded-full border border-pink-300/40 bg-black/40 text-white backdrop-blur-xl"
 
       >
 

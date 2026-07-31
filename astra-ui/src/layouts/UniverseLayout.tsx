@@ -112,7 +112,7 @@ function UniverseLayout(){
 
                   setStarName(
 
-                    data.starName || ""
+                    (data.starName || "").toLowerCase()
 
                   );
 
@@ -244,7 +244,7 @@ location.pathname !== "/home" &&
       {
 
 
-        starName==="eraya" && (
+        starName.toLowerCase()==="eraya" && (
 
 
           <GlobalKissCounter

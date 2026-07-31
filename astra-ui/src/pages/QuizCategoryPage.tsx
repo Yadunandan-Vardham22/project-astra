@@ -399,7 +399,7 @@ rounded-3xl
 border
 border-white/10
 bg-white/[0.04]
-p-10
+p-6 md:p-10
 "
 
 >
@@ -552,7 +552,7 @@ rounded-full
 border
 border-purple-300/30
 bg-purple-500/10
-py-4
+py-3 md:py-4
 text-xs
 tracking-[0.4em]
 hover:bg-purple-500/20
@@ -611,7 +611,7 @@ rounded-3xl
 border
 border-purple-300/30
 bg-purple-500/10
-p-10
+p-6 md:p-10
 text-center
 "
 

@@ -526,7 +526,7 @@ function BucketCollectionPage(){
                 cursor-pointer
                 rounded-3xl
                 border
-                p-10
+                p-6 md:p-10
                 transition
 
 
@@ -604,7 +604,7 @@ className="
     bg-pink-400/10
     px-3
     py-3
-    text-[9px]
+    text-xs md:text-[9px]
     tracking-[0.25em]
     text-pink-200
     backdrop-blur-md
@@ -812,24 +812,7 @@ className="
 
 
 
-  className="
-    fixed
-    bottom-28
-    right-8
-    z-[100]
-    cursor-pointer
-    rounded-full
-    border
-    border-purple-300/30
-    bg-purple-500/10
-    px-4
-    py-4
-    text-xs
-    tracking-[0.4em]
-    backdrop-blur-xl
-    transition
-    hover:bg-purple-500/20
-  "
+  className="fixed bottom-20 md:bottom-28 right-4 md:right-8 z-[100] cursor-pointer rounded-full border border-purple-300/30 bg-purple-500/10 px-3 md:px-4 py-3 md:py-4 text-xs tracking-[0.4em] backdrop-blur-xl transition hover:bg-purple-500/20"
 
 
 >

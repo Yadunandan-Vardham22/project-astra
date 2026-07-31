@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 function ShootingStar() {
   return (
     <motion.div
-      className="absolute h-[2px] w-40 -rotate-45 rounded-full"
+      className="absolute h-[2px] w-[45vw] md:w-40 -rotate-45 rounded-full"
       style={{
         background:
           "linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0))",

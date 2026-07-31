@@ -334,7 +334,7 @@ function LoveChallengesPage() {
                           border-white/10
                           bg-white/[0.02]
                           px-5
-                          py-4
+                          py-3 md:py-4
                           transition
                           hover:border-pink-300/30
                         "
@@ -349,7 +349,7 @@ function LoveChallengesPage() {
 
                           </p>
 
-                          <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-white/40">
+                          <p className="mt-1 text-xs md:text-[11px] uppercase tracking-[0.2em] text-white/40">
 
                             Created by {challenge.createdByName}
 
@@ -445,7 +445,7 @@ function LoveChallengesPage() {
                             border-white/5
                             bg-white/[0.015]
                             px-5
-                            py-4
+                            py-3 md:py-4
                             opacity-70
                           "
 
@@ -459,7 +459,7 @@ function LoveChallengesPage() {
 
                             </p>
 
-                            <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-white/35">
+                            <p className="mt-1 text-xs md:text-[11px] uppercase tracking-[0.2em] text-white/35">
 
                               Created by {challenge.createdByName}
 

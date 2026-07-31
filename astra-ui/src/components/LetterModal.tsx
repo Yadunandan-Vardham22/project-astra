@@ -65,15 +65,7 @@ function LetterModal({
 
         onClick={(e)=>e.stopPropagation()}
 
-        className="
-          relative
-          flex
-          min-h-[500px]
-          w-[90%]
-          max-w-xl
-          items-center
-          justify-center
-        "
+        className="relative flex min-h-[40vh] md:min-h-[500px] w-[90%] max-w-xl items-center justify-center"
 
       >
 
@@ -233,17 +225,7 @@ function LetterModal({
 
 
 
-          className="
-            relative
-            overflow-hidden
-            rounded-3xl
-            border
-            border-pink-200/30
-            bg-[#faf5ed]
-            p-10
-            text-black
-            shadow-2xl
-          "
+          className="relative overflow-hidden rounded-3xl border border-pink-200/30 bg-[#faf5ed] p-6 md:p-10 text-black shadow-2xl"
 
         >
 

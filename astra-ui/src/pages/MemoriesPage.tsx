@@ -334,7 +334,7 @@ function MemoriesPage(){
             border
             border-white/10
             bg-white/5
-            p-10
+            p-6 md:p-10
             text-center
             backdrop-blur-xl
           "

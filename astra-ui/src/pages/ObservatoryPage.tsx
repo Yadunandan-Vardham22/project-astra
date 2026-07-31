@@ -643,7 +643,7 @@ function formatDate(timestamp:any){
                 cursor-pointer
                 rounded-3xl
                 border
-                p-10
+                p-6 md:p-10
                 backdrop-blur-xl
                 transition
                 hover:scale-[1.01]
@@ -731,7 +731,7 @@ function formatDate(timestamp:any){
           bg-purple-500/20
           px-3
           py-1
-          text-[10px]
+          text-xs md:text-[10px]
           tracking-widest
           text-purple-200
         "
@@ -872,7 +872,7 @@ function formatDate(timestamp:any){
                 border-purple-300/40
                 bg-purple-500/20
                 px-6
-                py-4
+                py-3 md:py-4
                 text-xs
                 tracking-widest
                 backdrop-blur-xl

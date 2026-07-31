@@ -238,7 +238,7 @@ function EditLetterModal({
           border
           border-white/10
           bg-black
-          p-10
+          p-6 md:p-10
           text-white
         "
 
@@ -502,7 +502,7 @@ function EditLetterModal({
             border
             border-purple-300/30
             bg-purple-500/10
-            py-4
+            py-3 md:py-4
             text-xs
             tracking-[0.4em]
           "

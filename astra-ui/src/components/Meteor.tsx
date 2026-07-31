@@ -39,7 +39,7 @@ function Meteor({
     >
       {/* Tail Layer 1 */}
       <div
-        className="absolute right-2 h-[2px] w-52"
+        className="absolute right-2 h-[2px] w-[40vw] md:w-52"
         style={{
           background:
             "linear-gradient(to left, transparent, rgba(255,255,255,0.75))",
@@ -49,7 +49,7 @@ function Meteor({
 
       {/* Tail Layer 2 */}
       <div
-        className="absolute right-2 h-[5px] w-40"
+        className="absolute right-2 h-[5px] w-[32vw] md:w-40"
         style={{
           background:
             "linear-gradient(to left, transparent, rgba(180,220,255,0.30))",
@@ -59,7 +59,7 @@ function Meteor({
 
       {/* Tail Layer 3 */}
       <div
-        className="absolute right-2 h-[12px] w-28"
+        className="absolute right-2 h-[12px] w-[22vw] md:w-28"
         style={{
           background:
             "linear-gradient(to left, transparent, rgba(120,180,255,0.12))",
@@ -68,14 +68,14 @@ function Meteor({
       />
 
       {/* Outer Glow */}
-      <div className="absolute right-0 h-10 w-10 rounded-full bg-blue-200/20 blur-xl" />
+      <div className="absolute right-0 h-8 w-8 md:h-10 md:w-10 rounded-full bg-blue-200/20 blur-xl" />
 
       {/* Inner Glow */}
-      <div className="absolute right-1 h-6 w-6 rounded-full bg-white/40 blur-md" />
+      <div className="absolute right-1 h-5 w-5 md:h-6 md:w-6 rounded-full bg-white/40 blur-md" />
 
       {/* Core */}
       <div
-        className="relative h-3 w-3 rounded-full bg-white"
+        className="relative h-2 w-2 md:h-3 md:w-3 rounded-full bg-white"
         style={{
           boxShadow: `
             0 0 8px #fff,

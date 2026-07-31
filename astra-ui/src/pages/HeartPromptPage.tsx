@@ -240,7 +240,7 @@ function HeartPromptPage(){
 
         ) : !prompt ? (
 
-          <div className="rounded-3xl border border-pink-500/20 bg-[#151515] p-10 text-center">
+          <div className="rounded-3xl border border-pink-500/20 bg-[#151515] p-6 md:p-10 text-center">
 
             <div className="text-6xl mb-5">
 

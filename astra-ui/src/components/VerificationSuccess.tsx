@@ -83,14 +83,10 @@ function VerificationSuccess({ onComplete }: Props) {
           duration:3
         }}
 
-        className="
-          absolute
-          h-[300px]
-          w-[300px]
-          rounded-full
-          bg-purple-500/30
-          blur-[120px]
-        "
+        className={
+          `absolute rounded-full bg-purple-500/30 blur-[120px]
+          w-[40vmax] h-[40vmax] md:w-[300px] md:h-[300px]`
+        }
 
       />
 

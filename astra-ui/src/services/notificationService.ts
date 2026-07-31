@@ -59,6 +59,8 @@ export async function createNotification(
 
       ...notification,
 
+      receiver: notification.receiver.trim().toLowerCase(),
+
 
       read:false,
 

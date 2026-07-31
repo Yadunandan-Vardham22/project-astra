@@ -872,7 +872,7 @@ useEffect(()=>{
             border
             border-white/10
             bg-white/[0.04]
-            p-10
+            p-6 md:p-10
             backdrop-blur-xl
           "
 

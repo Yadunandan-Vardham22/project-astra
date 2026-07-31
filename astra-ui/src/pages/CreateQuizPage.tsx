@@ -1621,7 +1621,7 @@ hover:bg-white/10
             border
             border-white/10
             bg-white/5
-            p-10
+            p-6 md:p-10
           "
 
         >

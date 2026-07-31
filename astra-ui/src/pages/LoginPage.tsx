@@ -138,17 +138,7 @@ function LoginPage() {
       <CosmicTrails />
 
 
-      <div
-        className="
-          relative
-          z-10
-          flex
-          h-full
-          items-center
-          justify-start
-          pl-24
-        "
-      >
+      <div className="relative z-10 flex h-full items-center justify-start px-6 md:pl-24">
 
         <motion.div
           initial={{
@@ -167,12 +157,7 @@ function LoginPage() {
             duration: 1.8,
           }}
 
-          className="
-            flex
-            w-[340px]
-            flex-col
-            items-start
-          "
+          className="flex w-full max-w-[340px] flex-col items-start"
         >
 
 

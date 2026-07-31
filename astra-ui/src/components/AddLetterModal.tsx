@@ -478,7 +478,7 @@ await createNotification({
             border
             border-white/10
             bg-black/90
-            p-10
+            p-6 md:p-10
             text-white
           "
 
@@ -784,7 +784,7 @@ await createNotification({
       border
       border-pink-300/30
       bg-pink-500/10
-      py-4
+      py-3 md:py-4
       text-xs
       tracking-[0.4em]
     "

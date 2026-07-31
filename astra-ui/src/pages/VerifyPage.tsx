@@ -349,11 +349,7 @@ function VerifyPage() {
 
 
 
-          className="
-            w-[420px]
-            text-center
-            -translate-y-10
-          "
+          className="w-full max-w-[420px] text-center -translate-y-10 px-6"
 
 
         >

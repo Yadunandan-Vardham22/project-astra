@@ -8,3 +8,52 @@
   scrollbar-width:none;
   -ms-overflow-style:none;
 }
+
+/* Global responsive tweaks */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+button, input, textarea, select {
+  max-width: 100%;
+}
+
+/* Ensure fixed UI elements don't cover content on small screens */
+@media (max-width: 640px) {
+  body {
+    padding-bottom: 5.5rem;
+  }
+}
+
+@media (min-width: 641px) {
+  body {
+    padding-bottom: 3.5rem;
+  }
+}
+
+/* Prevent horizontal scrolling across the entire app */
+html, body, #root {
+  overflow-x: hidden;
+}
+
+/* Ensure media and svg assets never cause overflow */
+img, picture, svg, video, iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Helpful utility (apply to containers that should never overflow) */
+.no-h-scroll {
+  overflow-x: hidden;
+}
+
+/* Ensure the page background fills padded areas (no white gap) */
+html, body, #root {
+  min-height: 100%;
+  background-color: #000; /* app uses dark theme; ensures padded area matches */
+}
+
+body {
+  min-height: 100vh;
+}

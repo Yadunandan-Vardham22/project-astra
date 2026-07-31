@@ -578,7 +578,7 @@ function QuizCollectionPage(){
 
                   border
 
-                  p-10
+                  p-6 md:p-10
 
                   ${theme.border}
 
@@ -845,23 +845,7 @@ function QuizCollectionPage(){
 
 
 
-        className="
-          fixed
-          bottom-28
-          right-8
-          z-50
-          cursor-pointer
-          rounded-full
-          border
-          border-purple-300/30
-          bg-purple-500/10
-          px-4
-          py-4
-          text-xs
-          tracking-[0.4em]
-          transition
-          hover:bg-purple-500/20
-        "
+        className="fixed bottom-20 md:bottom-28 right-4 md:right-8 z-50 cursor-pointer rounded-full border border-purple-300/30 bg-purple-500/10 px-3 md:px-4 py-3 md:py-4 text-xs tracking-[0.4em] transition hover:bg-purple-500/20"
 
 
       >

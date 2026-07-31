@@ -187,13 +187,7 @@ useEffect(() => {
       damping: 30,
       mass: 0.4,
     }}
-    className="
-      absolute
-      h-[350px]
-      w-[350px]
-      rounded-full
-      blur-3xl
-    "
+    className="absolute rounded-full blur-3xl w-[40vmax] h-[40vmax] md:w-[350px] md:h-[350px]"
     style={{
       background:
         "radial-gradient(circle, rgba(255,255,255,0.045) 0%, rgba(147,197,253,0.03) 35%, transparent 75%)",

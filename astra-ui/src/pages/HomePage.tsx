@@ -164,7 +164,7 @@ function HomePage(){
 
                   setStarName(
 
-                    data.starName || ""
+                    (data.starName || "").toLowerCase()
 
                   );
 
@@ -543,24 +543,7 @@ function HomePage(){
 
 
 
-   <div
-  className="
-    fixed
-    top-8
-    right-8
-    z-50
-    flex
-    items-center
-    gap-4
-    rounded-full
-    border
-    border-white/10
-    bg-black/40
-    px-4
-    py-2
-    backdrop-blur-xl
-  "
->
+   <div className="fixed top-4 md:top-8 right-4 md:right-8 z-50 flex items-center gap-3 md:gap-4 rounded-full border border-white/10 bg-black/40 px-3 md:px-4 py-2 backdrop-blur-xl">
 
     <StardustCounter
         value={stardust}
@@ -610,7 +593,7 @@ function HomePage(){
 
       {
 
-        starName==="icarus" && (
+        starName.toLowerCase()==="icarus" && (
 
 
 

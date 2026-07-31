@@ -292,7 +292,7 @@ function QuizResultPage(){
             rounded-full
             border
             border-white/20
-            py-4
+            py-3 md:py-4
             text-xs
             tracking-[0.4em]
             transition

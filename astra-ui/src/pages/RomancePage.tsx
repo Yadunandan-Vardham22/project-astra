@@ -155,7 +155,7 @@ const romanceFeatures = [
                   w-full
                   rounded-3xl
                   border
-                  p-10
+                  p-6 md:p-10
                   text-left
                   transition
                   backdrop-blur-xl
