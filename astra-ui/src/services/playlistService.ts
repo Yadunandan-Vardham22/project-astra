@@ -23,8 +23,8 @@ export interface PlaylistModel {
 
 export interface PlaylistTrackModel {
   id: string;
-  spotifyTrackId: string;
-  spotifyUrl: string;
+  trackId: string;
+  sourceUrl: string;
   songTitle: string;
   artist: string;
   album: string;
@@ -100,7 +100,7 @@ export const playlistService = {
   ) {
     const playlistRef = collection(db, "playlists", playlistId, "tracks");
     const snapshot = await getDocs(playlistRef);
-    const alreadyExists = snapshot.docs.some((item) => item.data().spotifyTrackId === track.spotifyTrackId);
+    const alreadyExists = snapshot.docs.some((item) => item.data().trackId === track.trackId);
 
     if (alreadyExists) {
       return null;
@@ -108,8 +108,8 @@ export const playlistService = {
 
     const payload: PlaylistTrackModel = {
       id: "",
-      spotifyTrackId: track.spotifyTrackId,
-      spotifyUrl: track.spotifyUrl,
+      trackId: track.trackId,
+      sourceUrl: track.sourceUrl,
       songTitle: track.songTitle,
       artist: track.artist,
       album: track.album,

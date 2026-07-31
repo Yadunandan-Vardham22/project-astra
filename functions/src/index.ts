@@ -1,1 +1,1 @@
-export { spotify } from "./spotify/spotify.routes";
+// Cloud Functions entry point.

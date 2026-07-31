@@ -1,10 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import FloatingMusicBackground from "../components/FloatingMusicBackground";
 import PlaylistCard from "../components/PlaylistCard";
-import PlaylistSearch from "../components/PlaylistSearch";
-import { playlistService, type PlaylistModel } from "../services/playlistService";
-import { spotifyService } from "../services/spotify.service";
-import type { SpotifyTrack } from "../types/spotify";
+import { playlistService, type PlaylistModel, type PlaylistTrackModel } from "../services/playlistService";
 
 interface PlaylistSummary {
   trackCount: number;
@@ -14,23 +11,16 @@ interface PlaylistSummary {
 
 function PlaylistPage() {
   const [playlists, setPlaylists] = useState<PlaylistModel[]>([]);
-  const [playlistSummaries, setPlaylistSummaries] = useState<Record<string, PlaylistSummary>>({});
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SpotifyTrack[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [, setPlaylistSummaries] = useState<Record<string, PlaylistSummary>>({});
   const [error, setError] = useState<string | null>(null);
-  const [emptyState, setEmptyState] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<string>("");
   const [newPlaylistTitle, setNewPlaylistTitle] = useState("");
   const [newPlaylistDescription, setNewPlaylistDescription] = useState("");
   const [creatingPlaylist, setCreatingPlaylist] = useState(false);
-  const searchRequestRef = useRef(0);
-  const latestQueryRef = useRef("");
-  const activeSearchControllerRef = useRef<AbortController | null>(null);
-  const [searchVersion, setSearchVersion] = useState(0);
+  const [selectedTrack, setSelectedTrack] = useState<PlaylistTrackModel | null>(null);
+  const [trackNote, setTrackNote] = useState("");
 
   useEffect(() => {
     const unsubscribe = playlistService.subscribeToPlaylists((nextPlaylists) => {
@@ -68,90 +58,32 @@ function PlaylistPage() {
       );
 
       if (active) {
-        setPlaylistSummaries(Object.fromEntries(summaries));
+        window.setTimeout(() => {
+          setPlaylistSummaries(Object.fromEntries(summaries));
+        }, 0);
       }
     }
 
-    loadSummaries();
+    void loadSummaries();
 
     return () => {
       active = false;
     };
   }, [playlists]);
 
-  useEffect(() => {
-    const trimmedQuery = query.trim();
-    latestQueryRef.current = trimmedQuery;
+  async function handleAddTrack(track: PlaylistTrackModel, note: string) {
+    if (!selectedPlaylistId) return;
 
-    if (!trimmedQuery || trimmedQuery.length < 2) {
-      setResults([]);
-      setError(null);
-      setEmptyState(null);
-      setLoading(false);
-      return;
-    }
-
-    if (activeSearchControllerRef.current) {
-      activeSearchControllerRef.current.abort();
-    }
-
-    const requestId = searchRequestRef.current + 1;
-    searchRequestRef.current = requestId;
-    const controller = new AbortController();
-    activeSearchControllerRef.current = controller;
-
-    setResults([]);
-    setLoading(true);
-    setError(null);
-    setEmptyState(null);
-
-    const timer = window.setTimeout(async () => {
-      try {
-        const nextResults = await spotifyService.searchTracks(trimmedQuery, controller.signal);
-
-        if (latestQueryRef.current !== trimmedQuery || searchRequestRef.current !== requestId) {
-          return;
-        }
-
-        setResults(nextResults);
-        setEmptyState(nextResults.length ? null : "No songs found");
-      } catch {
-        if (latestQueryRef.current !== trimmedQuery || searchRequestRef.current !== requestId) {
-          return;
-        }
-
-        setResults([]);
-        setError("Unable to search Spotify. Please try again.");
-        setEmptyState(null);
-      } finally {
-        if (latestQueryRef.current === trimmedQuery && searchRequestRef.current === requestId) {
-          setLoading(false);
-        }
-      }
-    }, 300);
-
-    return () => {
-      window.clearTimeout(timer);
-      if (activeSearchControllerRef.current === controller) {
-        controller.abort();
-      }
-    };
-  }, [query, searchVersion]);
-
-  async function handleAddTrack(track: SpotifyTrack, note: string) {
-    if (isSaving || !selectedPlaylistId) return;
-
-    setIsSaving(true);
     try {
       await playlistService.addTrackToPlaylist(
         selectedPlaylistId,
         {
-          spotifyTrackId: track.id,
-          spotifyUrl: track.spotifyUrl,
-          songTitle: track.title,
+          trackId: track.id,
+          sourceUrl: track.sourceUrl,
+          songTitle: track.songTitle,
           artist: track.artist,
           album: track.album,
-          albumArt: track.albumImage || "",
+          albumArt: track.albumArt,
           duration: track.duration,
           previewUrl: track.previewUrl,
         },
@@ -159,15 +91,12 @@ function PlaylistPage() {
         "You"
       );
 
-      setQuery("");
-      setResults([]);
+      setSelectedTrack(null);
+      setTrackNote("");
       setError(null);
-      setEmptyState(null);
       setIsAddModalOpen(false);
-    } catch (err) {
+    } catch {
       setError("Unable to save this song to your soundtrack right now.");
-    } finally {
-      setIsSaving(false);
     }
   }
 
@@ -184,11 +113,29 @@ function PlaylistPage() {
       setNewPlaylistTitle("");
       setNewPlaylistDescription("");
       setIsCreateModalOpen(false);
-    } catch (err) {
+    } catch {
       setError("Unable to create that playlist right now.");
     } finally {
       setCreatingPlaylist(false);
     }
+  }
+
+  function updateSelectedTrack(nextValues: Partial<PlaylistTrackModel>) {
+    setSelectedTrack((current) => ({
+      id: current?.id || "",
+      trackId: current?.trackId || "",
+      sourceUrl: current?.sourceUrl || "",
+      songTitle: current?.songTitle || "",
+      artist: current?.artist || "",
+      album: current?.album || "",
+      albumArt: current?.albumArt || "",
+      duration: current?.duration || 0,
+      previewUrl: current?.previewUrl ?? null,
+      addedBy: current?.addedBy || "You",
+      addedAt: current?.addedAt || new Date().toISOString(),
+      personalNote: current?.personalNote ?? null,
+      ...nextValues,
+    }));
   }
 
   const accentClasses = useMemo(() => [
@@ -268,8 +215,8 @@ function PlaylistPage() {
                 type="button"
                 onClick={() => {
                   setIsAddModalOpen(false);
-                  setQuery("");
-                  setResults([]);
+                  setSelectedTrack(null);
+                  setTrackNote("");
                   setError(null);
                 }}
                 className="rounded-full border border-white/10 bg-white/10 px-3 py-2 text-sm text-white/70"
@@ -321,18 +268,64 @@ function PlaylistPage() {
               ) : null}
             </div>
 
-            <div className="mt-6">
-              <PlaylistSearch
-                value={query}
-                onChange={setQuery}
-                results={results}
-                loading={loading}
-                error={error}
-                emptyState={emptyState}
-                onAddTrack={handleAddTrack}
-                onRetry={() => setSearchVersion((current) => current + 1)}
-                disabled={isSaving}
-              />
+            <div className="mt-6 rounded-[28px] border border-white/10 bg-white/[0.04] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.24)] backdrop-blur-xl sm:p-6">
+              <p className="text-[10px] uppercase tracking-[0.35em] text-pink-200/70">Add a song manually</p>
+              <p className="mt-3 text-sm leading-7 text-white/70">
+                Choose a playlist and enter the song details you want to remember.
+              </p>
+              {error ? <p className="mt-3 text-sm text-amber-200">{error}</p> : null}
+              <div className="mt-4 space-y-3">
+                <input
+                  value={selectedTrack?.songTitle || ""}
+                  onChange={(event) => updateSelectedTrack({ songTitle: event.target.value })}
+                  placeholder="Song title"
+                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none placeholder:text-white/40"
+                />
+                <input
+                  value={selectedTrack?.artist || ""}
+                  onChange={(event) => updateSelectedTrack({ artist: event.target.value })}
+                  placeholder="Artist"
+                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none placeholder:text-white/40"
+                />
+                <input
+                  value={selectedTrack?.album || ""}
+                  onChange={(event) => updateSelectedTrack({ album: event.target.value })}
+                  placeholder="Album"
+                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none placeholder:text-white/40"
+                />
+                <textarea
+                  value={trackNote}
+                  onChange={(event) => setTrackNote(event.target.value)}
+                  placeholder="Why is this song part of your story?"
+                  className="min-h-[90px] w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none placeholder:text-white/40"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!selectedTrack) {
+                    setSelectedTrack({
+                      id: "",
+                      trackId: "",
+                      sourceUrl: "",
+                      songTitle: "",
+                      artist: "",
+                      album: "",
+                      albumArt: "",
+                      duration: 0,
+                      previewUrl: null,
+                      addedBy: "You",
+                      addedAt: new Date().toISOString(),
+                      personalNote: null,
+                    });
+                    return;
+                  }
+                  handleAddTrack(selectedTrack, trackNote);
+                }}
+                className="mt-4 rounded-full border border-pink-300/30 bg-pink-400/20 px-4 py-2 text-sm text-pink-100 transition hover:bg-pink-400/30"
+              >
+                Add song
+              </button>
             </div>
           </div>
         </div>

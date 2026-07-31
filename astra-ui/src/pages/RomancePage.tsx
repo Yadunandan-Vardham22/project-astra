@@ -1,5 +1,4 @@
 
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import FloatingHeartsBackground from "../components/FloatingHeartsBackground";
 
@@ -41,13 +40,6 @@ function RomancePage() {
       description: "Add your favourite lines and let the other heart like them.",
       locked: false,
       path: "/romance/quotes",
-    },
-    {
-      icon: "🎵",
-      title: "Playlists",
-      description: "Build the soundtrack of your relationship.",
-      locked: false,
-      path: "/romance/playlists",
     },
   ];
 
