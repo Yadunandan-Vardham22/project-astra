@@ -28,6 +28,9 @@ import {
   db
 } from "../firebase/firebaseConfig";
 
+import FloatingPuzzleBackground from "../components/FloatingPuzzleBackground";
+import BackButton from "../components/BackButton";
+
 
 
 
@@ -1542,64 +1545,51 @@ await addDoc(
     <div
 
       className="
+        relative
         min-h-screen
+        w-screen
+        overflow-y-auto
         bg-black
         px-8
-        py-20
+        pb-20
+        pt-8
         text-white
       "
 
     >
 
+      <FloatingPuzzleBackground />
+      <BackButton path="/quiz" label="Quiz Galaxy" />
 
       <div
 
         className="
           mx-auto
-          max-w-5xl
+          max-w-5xl          
+          
         "
 
       >
 
-        <button
+        <div className="text-center">
+          <div className="flex items-center justify-center gap-3">
+            <h1
+              className="
+                text-3xl
+                font-light
+                tracking-[0.3em]
+                sm:text-4xl
+              "
+            >
+              CREATE QUIZ
+            </h1>
+            <div className="text-4xl sm:text-5xl">✦</div>
+          </div>
 
-onClick={()=>navigate("/quiz")}
-
-className="
-cursor-pointer
-rounded-full
-border
-border-white/20
-bg-white/5
-px-6
-py-3
-text-xs
-tracking-widest
-text-white/80
-transition
-hover:bg-white/10
-"
-
->
-
-← QUIZ GALAXY
-
-</button>
-
-        <h1
-
-          className="
-            text-center
-            text-5xl
-            font-light
-            tracking-[0.2em]
-          "
-
-        >
-
-          CREATE QUIZ ✦
-
-        </h1>
+          <p className="mt-5 text-xs tracking-[0.5em] text-purple-300">
+            SHAPE A NEW CONSTELLATION FOR YOUR QUIZ GALAXY
+          </p>
+        </div>
 
 
 

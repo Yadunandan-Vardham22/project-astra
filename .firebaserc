@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "astra-dev-a3586",
+    "astra-dev": "astra-dev-a3586",
+    "astra-prod": "astra-to-all-stars"
+  },
+  "targets": {},
+  "etags": {}
+}

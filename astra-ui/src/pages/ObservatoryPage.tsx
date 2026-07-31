@@ -22,6 +22,7 @@ import {
 
 
 import AddStoryModal from "../components/AddStoryModal";
+import FloatingFirefliesBackground from "../components/FloatingFirefliesBackground";
 
 
 
@@ -47,8 +48,14 @@ function ObservatoryPage(){
 const [newStories,setNewStories] =
   useState<string[]>([]);
 
+const [authorFilter,setAuthorFilter] =
+  useState<"all"|"icarus"|"eraya"|"favorites">("all");
+
 const [starName,setStarName] =
   useState("");
+
+const [favoriteStoryIds,setFavoriteStoryIds] =
+  useState<string[]>([]);
 
 
 
@@ -185,6 +192,12 @@ useEffect(()=>{
 
         setStarName(
           currentStarName
+        );
+
+        setFavoriteStoryIds(
+          Array.isArray(data.favoriteStoryIds)
+            ? data.favoriteStoryIds
+            : []
         );
 
 
@@ -324,6 +337,18 @@ function formatDate(timestamp:any){
 
 }
 
+const filteredStories = stories.filter((story) => {
+  if (authorFilter === "favorites") {
+    return favoriteStoryIds.includes(story.id);
+  }
+
+  if (authorFilter === "all") {
+    return true;
+  }
+
+  return (story.author || "").toLowerCase() === authorFilter;
+});
+
 
 
 
@@ -336,17 +361,21 @@ function formatDate(timestamp:any){
 
 
       className="
+        relative
         min-h-screen
         w-screen
         overflow-y-auto
         bg-black
         px-8
-        py-20
+        pb-20
+        pt-8
         text-white
       "
 
 
     >
+
+      <FloatingFirefliesBackground />
 
 
 
@@ -391,56 +420,45 @@ function formatDate(timestamp:any){
 
 
 
-          <div className="text-6xl">
-
-            🔭
-
+          <div className="flex items-center justify-center gap-3">
+            <h1 className="text-3xl font-light tracking-[0.3em]">
+              Observatory
+            </h1>
+            <div className="text-4xl">🔭</div>
           </div>
 
-
-
-
-
-          <h1
-
-
-            className="
-              mt-6
-              text-5xl
-              font-light
-              tracking-[0.3em]
-            "
-
-
-          >
-
-            Observatory
-
-          </h1>
-
-
-
-
-
-          <p
-
-
-            className="
-              mt-5
-              text-xs
-              tracking-[0.5em]
-              text-purple-300
-            "
-
-
-          >
-
+          <p className="mt-5 text-xs tracking-[0.5em] text-purple-300">
             THE STAR ARCHIVE
-
           </p>
 
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            {[
+              { label: "All", value: "all" },
+              { label: "Icarus", value: "icarus" },
+              { label: "Eraya", value: "eraya" },
+              { label: "Favorites", value: "favorites" },
+            ].map((filter) => (
+              <button
+                key={filter.value}
+                onClick={() => setAuthorFilter(filter.value as any)}
+                className={
+                  `rounded-full border px-4 py-2 text-xs tracking-[0.35em] transition ${
+                    authorFilter === filter.value
+                      ? "border-white/30 bg-white/10 text-white"
+                      : "border-white/10 text-white/60 hover:border-white/20 hover:text-white"
+                  }`
+                }
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
 
-
+          {authorFilter === "favorites" && !loading && favoriteStoryIds.length === 0 && (
+            <p className="mt-3 text-center text-sm text-white/60">
+              No favourite chapters yet.
+            </p>
+          )}
 
         </div>
 
@@ -606,7 +624,9 @@ function formatDate(timestamp:any){
 
           className="
             mt-16
-            space-y-8
+            grid
+            gap-6
+            md:grid-cols-2
           "
 
 
@@ -619,7 +639,7 @@ function formatDate(timestamp:any){
 
 
         {
-          stories.map((story,index)=>(
+          filteredStories.map((story,index)=>(
 
 
 
@@ -640,10 +660,12 @@ function formatDate(timestamp:any){
 
               className={`
 
+                group
                 cursor-pointer
                 rounded-3xl
                 border
-                p-6 md:p-10
+                p-5 md:p-6
+                text-left
                 backdrop-blur-xl
                 transition
                 hover:scale-[1.01]
@@ -697,9 +719,11 @@ function formatDate(timestamp:any){
 
  <div
   className="
-    mt-5
+    mt-4
     flex
+    flex-wrap
     items-center
+    justify-between
     gap-3
   "
 >
@@ -707,7 +731,7 @@ function formatDate(timestamp:any){
   <h2
 
     className="
-      text-3xl
+      text-2xl
       font-light
     "
 

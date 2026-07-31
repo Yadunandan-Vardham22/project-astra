@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AddLetterModal from "../components/AddLetterModal";
+import FloatingHeartsBackground from "../components/FloatingHeartsBackground";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 
@@ -91,16 +92,19 @@ function LettersPage(){
     <div
 
       className="
+        relative
         min-h-screen
         w-screen
         overflow-y-auto
         bg-black
         px-8
-        py-20
+        pb-20
+        pt-8
         text-white
       "
 
     >
+      <FloatingHeartsBackground />
 
       <div
 
@@ -113,34 +117,31 @@ function LettersPage(){
 
         {/* Header */}
 
-        <div
+        <div className="text-center">
 
-          className="
-            text-center
-          "
+          <div className="flex items-center justify-center gap-3">
 
-        >
+            <h1
 
-          <div className="text-4xl">
+              className="
+                text-3xl
+                font-light
+                tracking-[0.3em]
+              "
 
-            💌
+            >
+
+              Letters
+
+            </h1>
+
+            <div className="text-4xl">
+
+              💌
+
+            </div>
 
           </div>
-
-          <h1
-
-            className="
-              mt-6
-              text-3xl
-              font-light
-              tracking-[0.3em]
-            "
-
-          >
-
-            Letters
-
-          </h1>
 
           <p
 
@@ -157,24 +158,6 @@ function LettersPage(){
 
           </p>
 
-          <p
-
-            className="
-              mx-auto
-              mt-8
-              max-w-xl
-              text-lg
-              italic
-              text-white/70
-            "
-
-          >
-
-            "Some feelings are too precious
-            to disappear with time."
-
-          </p>
-
         </div>
 
         {/* Letter Categories */}
@@ -182,7 +165,7 @@ function LettersPage(){
         <div
 
           className="
-            mt-20
+            mt-12
             grid
             gap-8
             md:grid-cols-2
@@ -280,54 +263,6 @@ function LettersPage(){
             ))
 
           }
-
-        </div>
-
-        {/* Bottom Quote */}
-
-        <div
-
-          className="
-            mt-20
-            rounded-3xl
-            border
-            border-purple-300/20
-            bg-purple-500/5
-            p-6 md:p-10
-            text-center
-          "
-
-        >
-
-          <p
-
-            className="
-              text-xs
-              tracking-[0.5em]
-              text-purple-300
-            "
-
-          >
-
-            LETTERS FROM THE UNIVERSE
-
-          </p>
-
-          <p
-
-            className="
-              mt-6
-              text-xl
-              font-light
-              italic
-            "
-
-          >
-
-            "Some words are written by hands.
-            Others are written by hearts."
-
-          </p>
 
         </div>
 

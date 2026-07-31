@@ -814,6 +814,8 @@ function QuizAttemptPage(){
 
                 reward,
 
+                answers,
+
                 completedAt:
 
                   new Date()

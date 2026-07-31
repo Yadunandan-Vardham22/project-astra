@@ -199,7 +199,7 @@ function AnswerHeartPromptModal({
 
             disabled={saving}
 
-            className="px-5 py-2 rounded-lg border border-gray-600 hover:bg-gray-700 transition"
+            className="px-5 py-2 rounded-lg border border-gray-600 hover:bg-gray-700 transition cursor-pointer"
 
           >
 
@@ -213,13 +213,11 @@ function AnswerHeartPromptModal({
 
             disabled={saving}
 
-            className="px-5 py-2 rounded-lg bg-pink-600 hover:bg-pink-500 disabled:opacity-50 transition"
+            className="px-5 py-2 rounded-lg bg-pink-600 hover:bg-pink-500 disabled:opacity-50 transition cursor-pointer"
 
           >
 
-            {saving
-              ? "Submitting..."
-              : "Submit Answer"}
+            {saving ? "Submitting..." : "Submit Answer"}
 
           </button>
 

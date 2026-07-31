@@ -75,6 +75,10 @@ function ChapterPage(){
 
   const [editOpen,setEditOpen]=useState(false);
 
+  const [favoriteStoryIds,setFavoriteStoryIds]=useState<string[]>([]);
+
+  const [favoriteUpdating,setFavoriteUpdating]=useState(false);
+
 
 
 
@@ -186,11 +190,64 @@ function ChapterPage(){
 
       auth,
 
-      (user)=>{
-
+      async (user)=>{
 
         setCurrentUser(user);
 
+        if(!user){
+
+          setFavoriteStoryIds([]);
+
+          return;
+
+        }
+
+
+        try{
+
+          const userRef = doc(
+
+            db,
+
+            "users",
+
+            user.uid
+
+          );
+
+          const userSnapshot = await getDoc(userRef);
+
+          if(userSnapshot.exists()){
+
+            const userData = userSnapshot.data() as { favoriteStoryIds?: string[] };
+
+            setFavoriteStoryIds(
+
+              Array.isArray(userData.favoriteStoryIds)
+
+                ? userData.favoriteStoryIds
+
+                : []
+
+            );
+
+          }
+
+          else{
+
+            setFavoriteStoryIds([]);
+
+          }
+
+        }
+
+        catch(error){
+
+          console.error("Error fetching favorite stories:", error);
+
+          setFavoriteStoryIds([]);
+
+        }
 
       }
 
@@ -453,6 +510,66 @@ useEffect(()=>{
 
 
 
+  const isFavorite = chapter ? favoriteStoryIds.includes(chapter) : false;
+
+
+  async function toggleFavorite(){
+
+    if(!currentUser || !chapter || favoriteUpdating)
+      return;
+
+
+    const userRef = doc(
+
+      db,
+
+      "users",
+
+      currentUser.uid
+
+    );
+
+    const currentFavorites = [...favoriteStoryIds];
+
+    const nextFavorites = isFavorite
+
+      ? currentFavorites.filter((storyId)=>storyId !== chapter)
+
+      : [...currentFavorites, chapter];
+
+
+    setFavoriteStoryIds(nextFavorites);
+
+    setFavoriteUpdating(true);
+
+
+    try{
+
+      await updateDoc(userRef, {
+
+        favoriteStoryIds: nextFavorites
+
+      });
+
+    }
+
+    catch(error){
+
+      setFavoriteStoryIds(currentFavorites);
+
+      console.error("Error updating favorite story:", error);
+
+    }
+
+    finally{
+
+      setFavoriteUpdating(false);
+
+    }
+
+  }
+
+
   const currentIndex =
 
     chapters.findIndex(
@@ -490,11 +607,12 @@ useEffect(()=>{
         relative
         min-h-screen
         w-screen
-        overflow-hidden
+        overflow-y-auto
         bg-black
-        px-8
-        py-20
+        px-4
+        py-8
         text-white
+        sm:px-8
       "
 
 
@@ -592,6 +710,10 @@ useEffect(()=>{
 
         label="Observatory"
 
+        top="top-8"
+
+        left="left-8"
+
       />
 
 
@@ -609,7 +731,15 @@ useEffect(()=>{
           relative
           z-10
           mx-auto
+          flex
+          min-h-screen
+          w-full
           max-w-3xl
+          flex-col
+          items-center
+          justify-start
+          
+          text-center
         "
 
 
@@ -624,6 +754,7 @@ useEffect(()=>{
         <div
 
           className="
+            w-full
             text-center
           "
 
@@ -635,75 +766,10 @@ useEffect(()=>{
 
 
 
-          <motion.div
-
-
-            animate={{
-
-              rotate:360
-
-            }}
-
-
-
-            transition={{
-
-              duration:20,
-
-              repeat:Infinity,
-
-              ease:"linear"
-
-            }}
-
-
-
-            className="
-              text-6xl
-            "
-
-          >
-
-            🔭
-
-          </motion.div>
-
-
-
-
-
-
-
-
-
-          <p
-
-            className="
-              mt-10
-              text-xs
-              tracking-[0.6em]
-              text-purple-300
-            "
-
-          >
-
-            CHAPTER
-
-          </p>
-
-
-
-
-
-
-
-
-
           <h1
 
             className="
-              mt-5
-              text-5xl
+              text-4xl
               font-light
             "
 
@@ -713,29 +779,17 @@ useEffect(()=>{
 
           </h1>
 
-
-
-
-
-
-
-
-
           <p
 
             className="
-              mt-5
+              mt-4
               text-sm
               text-purple-200
             "
 
           >
 
-            Written by:
-
-            {" "}
-
-            {story.author}
+            Written by {story.author}
 
           </p>
 
@@ -747,39 +801,6 @@ useEffect(()=>{
 
 
 
-          {
-            canEdit && (
-
-              <button
-
-
-                onClick={()=>setEditOpen(true)}
-
-
-
-                className="
-                  mt-6
-                  cursor-pointer
-                  rounded-full
-                  border
-                  border-purple-300/30
-                  bg-purple-500/10
-                  px-8
-                  py-3
-                  text-xs
-                  tracking-[0.4em]
-                  transition
-                  hover:bg-purple-500/20
-                "
-
-              >
-
-                ✦ EDIT STORY
-
-              </button>
-
-            )
-          }
 
 
 
@@ -918,134 +939,71 @@ useEffect(()=>{
         <div
 
           className="
-            mt-14
+            mt-10
             flex
+            w-full
+            flex-wrap
             justify-center
             gap-4
           "
 
         >
 
+          {canEdit && (
 
+            <button
 
+              onClick={()=>setEditOpen(true)}
 
+              className="
+                cursor-pointer
+                rounded-full
+                border
+                border-purple-300/30
+                bg-purple-500/10
+                px-8
+                py-3
+                text-xs
+                tracking-[0.4em]
+                transition
+                hover:bg-purple-500/20
+              "
 
-          {
-            previousChapter && (
+            >
 
-              <button
+              ✦ EDIT STORY
 
+            </button>
 
-                onClick={()=>navigate(
+          )}
 
-                  `/observatory/${previousChapter.id}`
+          <button
 
-                )}
+            onClick={toggleFavorite}
 
+            disabled={!currentUser || favoriteUpdating}
 
+            className="
+              cursor-pointer
+              rounded-full
+              border
+              border-pink-300/30
+              bg-pink-500/10
+              px-8
+              py-3
+              text-xs
+              tracking-[0.4em]
+              transition
+              hover:bg-pink-500/20
+              disabled:cursor-not-allowed
+              disabled:opacity-60
+            "
 
-                className="
-                  cursor-pointer
-                  rounded-full
-                  border
-                  border-white/20
-                  px-6
-                  py-3
-                  text-xs
-                  tracking-widest
-                "
+          >
 
-              >
+            {favoriteUpdating ? "Saving..." : isFavorite ? "★ FAVORITED" : "☆ FAVORITE"}
 
-                ← {previousChapter.title}
-
-              </button>
-
-            )
-          }
-
-
-
-
-
-
-
-
-          {
-            nextChapter && (
-
-              <button
-
-
-                onClick={()=>navigate(
-
-                  `/observatory/${nextChapter.id}`
-
-                )}
-
-
-
-                className="
-                  cursor-pointer
-                  rounded-full
-                  border
-                  border-white/20
-                  px-6
-                  py-3
-                  text-xs
-                  tracking-widest
-                "
-
-              >
-
-                {nextChapter.title} →
-
-              </button>
-
-            )
-          }
-
-
-
-
-
-
-
-
-          {
-            !previousChapter &&
-            !nextChapter && (
-
-              <button
-
-
-                onClick={()=>navigate("/observatory")}
-
-
-
-                className="
-                  cursor-pointer
-                  rounded-full
-                  border
-                  border-white/20
-                  px-6
-                  py-3
-                  text-xs
-                  tracking-widest
-                "
-
-              >
-
-                ← Observatory
-
-              </button>
-
-            )
-          }
-
-
-
-
+          </button>
 
         </div>
 

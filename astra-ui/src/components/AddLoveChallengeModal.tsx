@@ -57,6 +57,9 @@ function AddLoveChallengeModal({
   const [error, setError] =
     useState("");
 
+  const [reward, setReward] =
+    useState(20);
+
   useEffect(() => {
 
     const unsubscribe =
@@ -128,6 +131,11 @@ function AddLoveChallengeModal({
 
     }
 
+    if (!reward || reward < 1) {
+      setError("Reward must be at least 1 Stardust.");
+      return;
+    }
+
     try {
 
       setSaving(true);
@@ -183,7 +191,7 @@ const receiver =
 
     completedByName:"",
 
-    reward:20,
+    reward: reward,
 
     createdAt:serverTimestamp()
 }
@@ -276,6 +284,22 @@ const receiver =
           className="w-full rounded-xl bg-[#202020] border border-yellow-400/20 p-4 outline-none resize-none text-white placeholder:text-gray-500 focus:border-yellow-300 transition"
 
         />
+
+        <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto]">
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-gray-300">Stardust reward</label>
+            <input
+              type="number"
+              min={1}
+              value={reward}
+              onChange={(e) => setReward(Number(e.target.value) || 1)}
+              className="w-full rounded-xl bg-[#202020] border border-yellow-400/20 px-4 py-3 outline-none text-white focus:border-yellow-300 transition"
+            />
+          </div>
+          <div className="flex items-end text-xs text-gray-500">
+            Set how much Stardust the performer will earn.
+          </div>
+        </div>
 
         <div className="mt-2 flex justify-end">
 

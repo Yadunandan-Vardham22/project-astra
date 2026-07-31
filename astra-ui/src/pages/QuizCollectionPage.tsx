@@ -29,6 +29,9 @@ import {
   db
 } from "../firebase/firebaseConfig";
 
+import FloatingPuzzleBackground from "../components/FloatingPuzzleBackground";
+import HomeButton from "../components/HomeButton";
+
 
 
 function QuizCollectionPage(){
@@ -59,6 +62,10 @@ function QuizCollectionPage(){
   const [loading,setLoading] =
 
     useState(true);
+
+  const [activeFilter,setActiveFilter] =
+
+    useState<"all" | "eraya" | "icarus" | "completed">("all");
 
 
 
@@ -394,18 +401,59 @@ function QuizCollectionPage(){
 
 
 
+  function getCompletedResult(quiz:any){
+    const currentUserId = currentUser?.uid;
+
+    if(!currentUserId) return null;
+
+    const completedBy = Array.isArray(quiz.completedBy) ? quiz.completedBy : [];
+
+    const personalResult = completedBy.find((entry:any) => entry.userId === currentUserId);
+    if(personalResult) return personalResult;
+
+    if(quiz.authorId === currentUserId && completedBy.length > 0) {
+      return completedBy[completedBy.length - 1];
+    }
+
+    return null;
+  }
+
   function isCompleted(quiz:any){
+    const currentUserId = currentUser?.uid;
 
+    if(!currentUserId) return false;
 
-    return quiz.attemptedBy
+    const attemptedBy = Array.isArray(quiz.attemptedBy) ? quiz.attemptedBy : [];
+    const completedBy = Array.isArray(quiz.completedBy) ? quiz.completedBy : [];
 
-    ?.includes(
+    if(attemptedBy.includes(currentUserId)) return true;
 
-      currentUser?.uid
+    if(quiz.authorId === currentUserId && completedBy.length > 0) return true;
 
-    );
+    return false;
 
+  }
 
+  function getFilteredQuizzes() {
+    const normalized = quizzes.filter((quiz:any) => {
+      const authorName = (quiz.authorName || "").toLowerCase();
+
+      if(activeFilter === "eraya") {
+        return authorName === "eraya";
+      }
+
+      if(activeFilter === "icarus") {
+        return authorName === "icarus";
+      }
+
+      if(activeFilter === "completed") {
+        return isCompleted(quiz);
+      }
+
+      return true;
+    });
+
+    return normalized;
   }
 
 
@@ -424,17 +472,25 @@ function QuizCollectionPage(){
 
 
       className="
+        relative
         min-h-screen
+        w-screen
+        overflow-y-auto
         bg-black
         px-8
-        py-20
+        pb-20
+        pt-8
         text-white
       "
 
 
     >
 
+      <FloatingPuzzleBackground />
 
+      <div className="fixed left-8 top-8 z-[100]">
+        <HomeButton label="Home" to="/home" />
+      </div>
 
       <div className="
         mx-auto
@@ -450,24 +506,26 @@ function QuizCollectionPage(){
         ">
 
 
-          <div className="text-6xl">
+          <div className="flex items-center justify-center gap-3">
 
-            🧩
+            <h1 className="
+              text-3xl
+              font-light
+              tracking-[0.3em]
+              sm:text-4xl
+            ">
+
+              QUIZZES
+
+            </h1>
+
+            <div className="text-4xl sm:text-5xl">
+
+              🧩
+
+            </div>
 
           </div>
-
-
-
-          <h1 className="
-            mt-6
-            text-5xl
-            font-light
-            tracking-[0.3em]
-          ">
-
-            QUIZZES
-
-          </h1>
 
 
 
@@ -479,6 +537,20 @@ function QuizCollectionPage(){
           ">
 
             QUESTIONS WRITTEN AMONG STARS
+
+          </p>
+
+          <p className="
+            mx-auto
+            mt-8
+            max-w-xl
+            text-sm
+            leading-relaxed
+            text-white/70
+            sm:text-base
+          ">
+
+            Discover playful prompts, heartfelt questions, and little cosmic challenges for your love story.
 
           </p>
 
@@ -520,8 +592,29 @@ function QuizCollectionPage(){
 
 
 
+        <div className="mt-12 flex flex-wrap justify-center gap-3">
+          {[
+            { key: "all", label: "All Quizzes" },
+            { key: "eraya", label: "Created by Eraya" },
+            { key: "icarus", label: "Created by Icarus" },
+            { key: "completed", label: "Completed Quizzes" }
+          ].map((filter) => (
+            <button
+              key={filter.key}
+              onClick={() => setActiveFilter(filter.key as any)}
+              className={`rounded-full border px-4 py-2 text-[10px] uppercase tracking-[0.3em] transition ${
+                activeFilter === filter.key
+                  ? "border-purple-300/40 bg-purple-500/20 text-purple-100"
+                  : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
+              }`}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+
         <div className="
-          mt-16
+          mt-10
           space-y-8
         ">
 
@@ -529,7 +622,7 @@ function QuizCollectionPage(){
 
         {
 
-          quizzes.map(quiz=>{
+          getFilteredQuizzes().map(quiz=>{
 
 
             const theme =
@@ -557,6 +650,8 @@ function QuizCollectionPage(){
             const completed =
 
               isCompleted(quiz);
+
+            const completedResult = getCompletedResult(quiz);
 
 
 
@@ -681,26 +776,6 @@ function QuizCollectionPage(){
 
 
 
-                {
-
-                  author && (
-
-
-                    <p className="
-                      mt-6
-                      text-xs
-                      tracking-widest
-                      text-white/40
-                    ">
-
-                      CREATED BY YOU
-
-                    </p>
-
-
-                  )
-
-                }
 
 
 
@@ -709,25 +784,6 @@ function QuizCollectionPage(){
 
 
 
-                {
-
-                  author && (
-
-
-                    <p className="
-                      mt-3
-                      text-xs
-                      text-white/40
-                    ">
-
-                      You cannot take your own quiz
-
-                    </p>
-
-
-                  )
-
-                }
 
 
 
@@ -742,16 +798,44 @@ function QuizCollectionPage(){
                   completed && (
 
 
-                    <p className="
-                      mt-6
-                      text-xs
-                      tracking-widest
-                      text-green-300
-                    ">
+                    <div className="mt-6 flex flex-wrap items-center gap-3">
+                      <p className="
+                        text-xs
+                        tracking-widest
+                        text-green-300
+                      ">
 
-                      ✓ COMPLETED
+                        ✓ COMPLETED
 
-                    </p>
+                      </p>
+
+                      <button
+                        onClick={()=>navigate(`/quiz/result/${quiz.id}`, {
+                          state:{
+                            score: completedResult?.score || 0,
+                            reward: completedResult?.reward || quiz.reward || 0,
+                            quiz,
+                            answers: completedResult?.answers || []
+                          }
+                        })}
+                        className="
+                          cursor-pointer
+                          rounded-full
+                          border
+                          border-white/20
+                          px-4
+                          py-2
+                          text-[10px]
+                          uppercase
+                          tracking-[0.3em]
+                          text-white/80
+                          transition
+                          hover:bg-white/10
+                        "
+                      >
+                        VIEW RESULTS
+                      </button>
+                    </div>
 
 
                   )

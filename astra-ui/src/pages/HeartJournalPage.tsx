@@ -7,6 +7,8 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import FloatingHeartsBackground from "../components/FloatingHeartsBackground";
+import HomeButton from "../components/HomeButton";
 
 interface HeartJournal {
   id: string;
@@ -20,6 +22,7 @@ interface HeartJournal {
 function HeartJournalPage() {
   const [entries, setEntries] = useState<HeartJournal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedFilter, setSelectedFilter] = useState<"all" | "eraya" | "icarus">("all");
 
   useEffect(() => {
     const q = query(
@@ -42,16 +45,42 @@ function HeartJournalPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0b0b0b] text-white px-6 py-10">
-      <div className="max-w-5xl mx-auto">
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold text-pink-300">
-            🤍 Heart Journal
-          </h1>
+    <div className="relative min-h-screen w-screen overflow-y-auto bg-black px-8 pb-20 pt-8 text-white">
+      <FloatingHeartsBackground />
 
-          <p className="text-gray-400 mt-2">
-            Every answered Heart Prompt becomes a memory you'll always keep.
-          </p>
+      <div className="fixed left-8 top-8 z-[100]">
+        <HomeButton label="Romance" to="/romance" />
+      </div>
+
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-6">
+          <div className="flex items-center justify-center gap-3">
+            <h1 className="text-3xl font-light tracking-[0.3em]">Heart Journal</h1>
+            <div className="text-4xl">🤍</div>
+          </div>
+
+          <p className="mt-5 text-xs tracking-[0.5em] text-purple-300">Every answered Heart Prompt becomes a memory you'll always keep.</p>
+
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <button
+              onClick={() => setSelectedFilter("all")}
+              className={`px-3 py-2 rounded-full text-sm transition ${selectedFilter === "all" ? "bg-white/[0.06] border border-white/10 text-white" : "bg-transparent text-white/60 border border-white/5"}`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setSelectedFilter("eraya")}
+              className={`px-3 py-2 rounded-full text-sm transition ${selectedFilter === "eraya" ? "bg-pink-500/20 border border-pink-300/40 text-pink-200" : "bg-transparent text-white/60 border border-white/5"}`}
+            >
+              Eraya
+            </button>
+            <button
+              onClick={() => setSelectedFilter("icarus")}
+              className={`px-3 py-2 rounded-full text-sm transition ${selectedFilter === "icarus" ? "bg-sky-500/10 border border-sky-300/30 text-sky-200" : "bg-transparent text-white/60 border border-white/5"}`}
+            >
+              Icarus
+            </button>
+          </div>
         </div>
 
         {loading ? (
@@ -72,7 +101,15 @@ function HeartJournalPage() {
           </div>
         ) : (
           <div className="space-y-8">
-            {entries.map((entry) => (
+            {entries
+              .filter((entry) => {
+                if (selectedFilter === "all") return true;
+                const author = (entry.authorName || "").toLowerCase();
+                if (selectedFilter === "eraya") return author === "eraya";
+                if (selectedFilter === "icarus") return author === "icarus";
+                return true;
+              })
+              .map((entry) => (
      <div
   key={entry.id}
   className="

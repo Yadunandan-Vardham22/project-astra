@@ -8,6 +8,9 @@ import {
   useSearchParams
 } from "react-router-dom";
 
+import FloatingLeavesBackground from "../components/FloatingLeavesBackground";
+import GardenEntryModal from "../components/GardenEntryModal";
+
 
 import {
   onAuthStateChanged
@@ -69,7 +72,7 @@ function GardenPage(){
 
 
 
-  const [mode,setMode] =
+  const [modalType,setModalType] =
 
     useState<
 
@@ -80,30 +83,16 @@ function GardenPage(){
 
 
 
-  const [title,setTitle] =
-
-    useState("");
-
-
-
-
-  const [description,setDescription] =
-
-    useState("");
-
-
-
-
-  const [saving,setSaving] =
-
-    useState(false);
-
-
-
-
   const [submitted,setSubmitted] =
 
     useState(false);
+
+
+
+
+  const [submittedMessage,setSubmittedMessage] =
+
+    useState("");
 
 
 
@@ -268,271 +257,7 @@ function GardenPage(){
 
 
 
-  async function submitEntry(){
-
-
-
-    if(
-
-      !title.trim()
-
-      ||
-
-      !description.trim()
-
-      ||
-
-      !user
-
-      ||
-
-      !mode
-
-    )
-
-      return;
-
-
-
-
-
-
-    try{
-
-
-
-      setSaving(true);
-
-
-
-
-
-
-      const gardenRef =
-
-        await addDoc(
-
-
-
-          collection(
-
-            db,
-
-            "gardenEntries"
-
-          ),
-
-
-
-          {
-
-
-            type:mode,
-
-
-
-            title:title.trim(),
-
-
-
-
-            description:
-
-              description.trim(),
-
-
-
-
-            createdBy:
-
-              starName,
-
-
-
-
-            createdByUid:
-
-              user.uid,
-
-
-
-
-            status:
-
-              mode==="bug"
-
-              ?
-
-              "open"
-
-              :
-
-              "considering",
-
-
-
-
-            createdAt:
-
-              serverTimestamp()
-
-
-
-          }
-
-
-
-        );
-
-
-
-
-
-
-
-
-
-      await addDoc(
-
-
-
-        collection(
-
-          db,
-
-          "notifications"
-
-        ),
-
-
-
-        {
-
-
-          receiver:"icarus",
-
-
-
-          type:"garden",
-
-
-
-          title:
-
-            mode==="bug"
-
-            ?
-
-            "🐛 New Bug Report"
-
-            :
-
-            "🌱 New Feature Idea",
-
-
-
-
-          message:
-
-            `${starName} planted a new ${mode}`,
-
-
-
-
-          metadata:{
-
-
-            gardenId:
-
-              gardenRef.id
-
-
-          },
-
-
-
-
-          read:false,
-
-
-
-
-          createdAt:
-
-            serverTimestamp()
-
-
-
-        }
-
-
-
-      );
-
-
-
-
-
-
-
-
-      setTitle("");
-
-      setDescription("");
-
-      setMode(null);
-
-      setSubmitted(true);
-
-
-
-
-
-
-      setTimeout(()=>{
-
-
-        setSubmitted(false);
-
-
-      },3000);
-
-
-
-    }
-
-    catch(error){
-
-
-      console.error(
-
-        "Garden submit error",
-
-        error
-
-      );
-
-
-    }
-
-    finally{
-
-
-      setSaving(false);
-
-
-    }
-
-
-  }
-
-
-
-
-
-
-
-
+  // Garden entry submission is handled through GardenEntryModal.
 
   const isIcarus =
 
@@ -541,13 +266,26 @@ function GardenPage(){
     ===
 
     "icarus";
+  const isEraya =
 
+    starName.toLowerCase()
 
+    ===
 
+    "eraya";
 
-
-
-
+  function handleModalSubmitted(type: "bug" | "suggestion") {
+    setModalType(null);
+    setSubmitted(true);
+    setSubmittedMessage(
+      type === "bug"
+        ? "Bug report submitted successfully."
+        : "Suggestion submitted successfully."
+    );
+    setTimeout(() => {
+      setSubmitted(false);
+    }, 3000);
+  }
 
 
   return (
@@ -555,14 +293,29 @@ function GardenPage(){
     <div
 
       className="
+        relative
         min-h-screen
+        w-screen
+        overflow-y-auto
         bg-black
         px-8
-        py-20
+        pb-20
+        pt-8
         text-white
       "
 
     >
+
+      <FloatingLeavesBackground />
+
+      <div className="text-center">
+        <div className="flex items-center justify-center gap-3">
+          <h1 className="text-3xl font-light tracking-[0.3em]">Garden</h1>
+          <div className="text-4xl">🌱</div>
+        </div>
+
+        <p className="mt-5 text-xs tracking-[0.5em] text-purple-300">A place where Astra grows. Report bugs and plant ideas to make the universe better.</p>
+      </div>
 
 
 
@@ -579,7 +332,7 @@ function GardenPage(){
 
 
         <div className="
-          text-center
+          text-center hidden
         ">
 
 
@@ -642,7 +395,7 @@ function GardenPage(){
               text-center
             ">
 
-              🌱 Seed planted successfully
+              {submittedMessage}
 
             </div>
 
@@ -660,7 +413,7 @@ function GardenPage(){
 
 
         {
-          !isIcarus && !mode && (
+          isEraya && !modalType && (
 
 
             <div className="
@@ -673,7 +426,7 @@ function GardenPage(){
 
               <button
 
-                onClick={()=>setMode("bug")}
+                onClick={()=>setModalType("bug")}
 
                 className="
                   cursor-pointer
@@ -706,7 +459,7 @@ function GardenPage(){
 
               <button
 
-                onClick={()=>setMode("suggestion")}
+                onClick={()=>setModalType("suggestion")}
 
                 className="
                   cursor-pointer
@@ -742,106 +495,14 @@ function GardenPage(){
 
         }
 
-
-
-
-
-
-
-
-
         {
-          mode && (
-
-
-            <div className="
-              mt-12
-              rounded-3xl
-              bg-white/5
-              p-8
-            ">
-
-
-
-              <input
-
-                value={title}
-
-                onChange={e=>
-
-                  setTitle(e.target.value)
-
-                }
-
-                placeholder="Title"
-
-                className="
-                  w-full
-                  rounded-xl
-                  bg-black/40
-                  p-4
-                "
-
-              />
-
-
-
-
-              <textarea
-
-                value={description}
-
-                onChange={e=>
-
-                  setDescription(e.target.value)
-
-                }
-
-                placeholder="Description"
-
-                className="
-                  mt-5
-                  w-full
-                  rounded-xl
-                  bg-black/40
-                  p-4
-                "
-
-                rows={5}
-
-              />
-
-
-
-
-              <button
-
-                onClick={submitEntry}
-
-                disabled={saving}
-
-                className="
-                  mt-5
-                  cursor-pointer
-                  rounded-full
-                  bg-green-400
-                  px-8
-                  py-3
-                  text-black
-                "
-
-              >
-
-                Submit
-
-              </button>
-
-
-            </div>
-
-
+          modalType && (
+            <GardenEntryModal
+              type={modalType}
+              onClose={() => setModalType(null)}
+              onSubmitted={() => handleModalSubmitted(modalType!)}
+            />
           )
-
         }
 
 

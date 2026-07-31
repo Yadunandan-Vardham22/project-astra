@@ -3,12 +3,13 @@ import { motion } from "framer-motion";
 
 import { useEffect, useState } from "react";
 
-import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../firebase/firebaseConfig";
 import type { User } from "firebase/auth";
-import BackButton from "../components/BackButton";
+import HomeButton from "../components/HomeButton";
 import EditLetterModal from "../components/EditLetterModal";
+import FloatingHeartsBackground from "../components/FloatingHeartsBackground";
 
 const collectionInfo:any = {
 
@@ -30,6 +31,7 @@ function LetterPage(){
   const [loading,setLoading] = useState(true);
   const [currentUser,setCurrentUser] = useState<User|null>(null);
   const [editOpen,setEditOpen] = useState(false);
+  const [favoriteUpdating,setFavoriteUpdating] = useState(false);
 
   useEffect(()=>{
     const unsubscribe = onAuthStateChanged(auth, (user)=> setCurrentUser(user));
@@ -56,22 +58,68 @@ function LetterPage(){
 
   useEffect(()=>{ if(currentUser) fetchLetter(); },[letterId,currentUser]);
 
+  async function toggleFavorite() {
+    if(!currentUser || !letter) return;
+
+    const currentFavoritedBy = Array.isArray(letter.favoritedBy) ? letter.favoritedBy : [];
+    const isFavorite = currentFavoritedBy.includes(currentUser.uid);
+    const nextFavoritedBy = isFavorite
+      ? currentFavoritedBy.filter((id:string) => id !== currentUser.uid)
+      : [...currentFavoritedBy, currentUser.uid];
+
+    setLetter((prev:any) => prev ? { ...prev, favoritedBy: nextFavoritedBy } : prev);
+    setFavoriteUpdating(true);
+
+    try {
+      await updateDoc(doc(db, "letters", letter.id), {
+        favoritedBy: isFavorite
+          ? arrayRemove(currentUser.uid)
+          : arrayUnion(currentUser.uid)
+      });
+    } catch (error) {
+      console.error("Error updating favorite:", error);
+      setLetter((prev:any) => prev ? { ...prev, favoritedBy: currentFavoritedBy } : prev);
+    } finally {
+      setFavoriteUpdating(false);
+    }
+  }
+
   if(loading) return <div className="min-h-screen bg-black text-white flex items-center justify-center">Discovering letter...</div>;
   if(!letter) return <div className="min-h-screen bg-black text-white flex items-center justify-center">Letter not found</div>;
 
-  const canEdit = currentUser?.uid === letter.authorId;
+  const canEdit = Boolean(
+    currentUser &&
+      letter &&
+      (
+        currentUser.uid === letter.authorId ||
+        (letter.authorName && currentUser.displayName && letter.authorName.toLowerCase() === currentUser.displayName.toLowerCase()) ||
+        (letter.authorName && currentUser.email && letter.authorName.toLowerCase() === currentUser.email.split("@")[0].toLowerCase())
+      )
+  );
+
+  const isFavorite = Boolean(
+    currentUser &&
+      Array.isArray(letter.favoritedBy) &&
+      letter.favoritedBy.includes(currentUser.uid)
+  );
 
   return (
-    <div className="min-h-screen w-screen bg-black px-8 py-20 text-white">
-      <BackButton path={`/letters/${category}`} label="Letters" />
+    <div className="relative min-h-screen w-screen overflow-y-auto bg-black px-8 pb-20 pt-8 text-white">
+      <FloatingHeartsBackground />
+      <div className="fixed left-8 top-8 z-[100]">
+        <HomeButton label="Letters" to={`/letters/${category}`} />
+      </div>
+
       <div className="mx-auto max-w-3xl">
         <div className="text-center">
-          <motion.div initial={{ scale:0 }} animate={{ scale:1 }} className="text-5xl">{collection.icon}</motion.div>
-          <h1 className="mt-8 text-3xl font-light italic">{letter.title}</h1>
-          <p className="mt-5 text-sm text-purple-200">Written by: {letter.authorName}</p>
+          <div className="flex items-center justify-center gap-3">
+            <h1 className="text-3xl font-light tracking-[0.3em]">{letter.title}</h1>
+            <div className="text-4xl">{collection.icon}</div>
+          </div>
+          <p className="mx-auto mt-8 text-sm text-white/70">Written by {letter.authorName}</p>
         </div>
 
-        <motion.div initial={{ opacity:0, y:40 }} animate={{ opacity:1, y:0 }} className="mt-16 rounded-3xl border border-pink-200/30 bg-[#faf5ed] p-6 md:p-10 text-black shadow-2xl">
+        <motion.div initial={{ opacity:0, y:40 }} animate={{ opacity:1, y:0 }} className="mt-12 rounded-[2rem] border border-pink-200/20 bg-[#faf5ed] p-6 text-black shadow-[0_20px_60px_rgba(236,72,153,0.12)] md:p-10">
           <p className="whitespace-pre-line font-serif text-lg leading-relaxed">
             {letter.greeting || "Dear Star,"}
             {"\n\n"}
@@ -82,8 +130,30 @@ function LetterPage(){
           <div className="mt-10 text-right text-3xl">💋</div>
         </motion.div>
 
-        {canEdit && <button onClick={()=>setEditOpen(true)} className="mt-10 w-full cursor-pointer rounded-full border border-white/20 py-3 text-xs tracking-[0.4em] transition hover:bg-white/10">✦ EDIT LETTER</button>}
-        {editOpen && <EditLetterModal letter={letter} onClose={()=>setEditOpen(false)} onUpdated={()=>fetchLetter()} />}
+        <div className="mt-8 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={toggleFavorite}
+            disabled={!currentUser || favoriteUpdating}
+            className={`rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.32em] shadow-[0_0_30px_rgba(244,114,182,0.28)] transition ${
+              isFavorite
+                ? "border-pink-300/70 bg-pink-500/35 text-pink-50"
+                : "border-pink-300/40 bg-pink-500/20 text-pink-100"
+            } ${!currentUser ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:bg-pink-500/35 hover:shadow-[0_0_36px_rgba(244,114,182,0.36)]"}`}
+          >
+            {favoriteUpdating ? "Saving..." : isFavorite ? "★ Favorited" : "☆ Favorite"}
+          </button>
+
+          {canEdit && (
+            <button
+              onClick={() => setEditOpen(true)}
+              className="cursor-pointer rounded-full border border-pink-300/20 bg-pink-500/10 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.28em] text-pink-100 shadow-[0_0_20px_rgba(244,114,182,0.12)] transition hover:bg-pink-500/20"
+            >
+              Edit
+            </button>
+          )}
+        </div>
+        {editOpen && <EditLetterModal letter={letter} onClose={() => setEditOpen(false)} onUpdated={() => fetchLetter()} />}
       </div>
     </div>
   );

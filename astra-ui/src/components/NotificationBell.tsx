@@ -151,9 +151,30 @@ function NotificationBell(){
       return;
     }
 
-    if(notification.type === "futureDream" && notification.metadata?.dreamId){
+    if(notification.type === "futureDream"){
       await markNotificationRead(notification);
-      navigate("/romance/future-dreams");
+      navigate("/romance/quotes");
+      setOpen(false);
+      return;
+    }
+
+    if(notification.type === "quote"){
+      await markNotificationRead(notification);
+      navigate("/romance/quotes");
+      setOpen(false);
+      return;
+    }
+
+    if(notification.type === "heart_prompt"){
+      await markNotificationRead(notification);
+      navigate("/romance/heart-prompt");
+      setOpen(false);
+      return;
+    }
+
+    if(notification.type === "loveChallenge"){
+      await markNotificationRead(notification);
+      navigate("/romance/love-challenges");
       setOpen(false);
       return;
     }

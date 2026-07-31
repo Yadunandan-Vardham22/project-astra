@@ -33,6 +33,7 @@ import RomancePage from "./pages/RomancePage";
 import HeartPromptPage from "./pages/HeartPromptPage";
 import HeartJournalPage from "./pages/HeartJournalPage";
 import FutureDreamsPage from "./pages/FutureDreamsPage";
+import PlaylistPage from "./pages/PlaylistPage";
 
 import GardenPage from "./pages/GardenPage";
 
@@ -162,19 +163,24 @@ function App() {
           />
 
           <Route
-            path="/romance/future-dreams"
+            path="/romance/quotes"
             element={<FutureDreamsPage />}
           />
 
           <Route
-  path="/romance/love-challenges"
-  element={<LoveChallengesPage />}
-/>
+            path="/romance/love-challenges"
+            element={<LoveChallengesPage />}
+          />
 
-<Route
-  path="/romance/late-night"
-  element={<MidnightPage />}
-/>
+          <Route
+            path="/romance/late-night"
+            element={<MidnightPage />}
+          />
+
+          <Route
+            path="/romance/playlists"
+            element={<PlaylistPage />}
+          />
 
           {/* Garden */}
 

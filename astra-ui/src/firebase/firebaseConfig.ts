@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 // Read Firebase config from Vite env vars (VITE_FIREBASE_*)
 // Create a `.env.local` in `astra-ui/` for your development keys.
@@ -27,6 +28,9 @@ export const auth = getAuth(app);
 
 // Firebase Firestore Database
 export const db = getFirestore(app);
+
+// Firebase Storage
+export const storage = getStorage(app);
 
 // Initialize Analytics only in browser and when measurement id is provided
 if (typeof window !== "undefined" && import.meta.env.VITE_FIREBASE_MEASUREMENT_ID) {
