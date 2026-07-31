@@ -11,7 +11,7 @@ interface PlaylistSummary {
 
 function PlaylistPage() {
   const [playlists, setPlaylists] = useState<PlaylistModel[]>([]);
-  const [, setPlaylistSummaries] = useState<Record<string, PlaylistSummary>>({});
+  const [playlistSummaries, setPlaylistSummaries] = useState<Record<string, PlaylistSummary>>({});
   const [error, setError] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
